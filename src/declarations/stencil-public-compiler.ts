@@ -55,8 +55,9 @@ export interface StencilConfig {
   globalStyle?: string;
 
   /**
-   * When the hashFileNames config is set to true, and it is a production build,
-   * the hashedFileNameLength config is used to determine how many characters the file name's hash should be.
+   * When the hashFileNames config is set to true, and it is a production
+   * build, the hashedFileNameLength config is used to determine how many
+   * characters the file name's hash should be.
    */
   hashedFileNameLength?: number;
 
@@ -453,9 +454,16 @@ type RequireFields<T, K extends keyof T> = T & { [P in K]-?: T[P] };
 type StrictConfigFields =
   | 'cacheDir'
   | 'devServer'
+  | 'buildEs5'
   | 'flags'
+  | 'fsNamespace'
+  | 'hashFileNames'
+  | 'hashedFileNameLength'
   | 'hydratedFlag'
   | 'logger'
+  | 'minifyCss'
+  | 'minifyJs'
+  | 'namespace'
   | 'outputTargets'
   | 'packageJsonFilePath'
   | 'rollupConfig'
