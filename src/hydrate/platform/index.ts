@@ -135,7 +135,7 @@ export const registerHost = (elm: d.HostElement, cmpMeta: d.ComponentRuntimeMeta
   const hostRef: d.HostRef = {
     $flags$: 0,
     $cmpMeta$: cmpMeta,
-    $hostElement$: elm,
+    $hostElement$: new WeakRef(elm),
     $instanceValues$: new Map(),
     $renderCount$: 0,
   };

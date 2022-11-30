@@ -811,7 +811,13 @@ interface RelocateNodeData {
  * @param renderFnResults the virtual DOM nodes to be rendered
  */
 export const renderVdom = (hostRef: d.HostRef, renderFnResults: d.VNode | d.VNode[]) => {
-  const hostElm = hostRef.$hostElement$;
+  const hostElm = hostRef.$hostElement$.deref();
+
+  if (hostElm === undefined) {
+    // DOM node got GC'ed, let's get out of here
+    return
+  }
+
   const cmpMeta = hostRef.$cmpMeta$;
   const oldVNode: d.VNode = hostRef.$vnode$ || newVNode(null, null);
   const rootVnode = isHost(renderFnResults) ? renderFnResults : h(null, null, renderFnResults as any);

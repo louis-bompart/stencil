@@ -1729,7 +1729,7 @@ export interface HostRef {
   $ancestorComponent$?: HostElement;
   $flags$: number;
   $cmpMeta$: ComponentRuntimeMeta;
-  $hostElement$: HostElement;
+  $hostElement$?: WeakRef<HostElement>;
   $instanceValues$?: Map<string, any>;
   $lazyInstance$?: ComponentInterface;
   $onReadyPromise$?: Promise<any>;

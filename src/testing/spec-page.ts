@@ -181,7 +181,7 @@ export async function newSpecPage(opts: NewSpecPageOptions): Promise<SpecPage> {
       $flags$: 0,
       $modeName$: undefined,
       $cmpMeta$: cmpMeta,
-      $hostElement$: page.body,
+      $hostElement$: new WeakRef(page.body),
     };
     renderVdom(ref, opts.template());
   } else if (typeof opts.html === 'string') {

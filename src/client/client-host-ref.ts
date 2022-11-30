@@ -13,7 +13,7 @@ export const registerInstance = (lazyInstance: any, hostRef: d.HostRef) =>
 export const registerHost = (elm: d.HostElement, cmpMeta: d.ComponentRuntimeMeta) => {
   const hostRef: d.HostRef = {
     $flags$: 0,
-    $hostElement$: elm,
+    $hostElement$: new WeakRef(elm),
     $cmpMeta$: cmpMeta,
     $instanceValues$: new Map(),
   };
@@ -29,6 +29,7 @@ export const registerHost = (elm: d.HostElement, cmpMeta: d.ComponentRuntimeMeta
     elm['s-rc'] = [];
   }
   addHostEventListeners(elm, hostRef, cmpMeta.$listeners$, false);
+
   return hostRefs.set(elm, hostRef);
 };
 

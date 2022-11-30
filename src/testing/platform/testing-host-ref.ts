@@ -48,7 +48,7 @@ export const registerInstance = (
 export const registerHost = (elm: d.HostElement, cmpMeta: d.ComponentRuntimeMeta): void => {
   const hostRef: d.HostRef = {
     $flags$: 0,
-    $hostElement$: elm,
+    $hostElement$: new WeakRef(elm),
     $cmpMeta$: cmpMeta,
     $instanceValues$: new Map(),
     $renderCount$: 0,

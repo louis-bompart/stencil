@@ -11,7 +11,13 @@ export const getValue = (ref: d.RuntimeRef, propName: string) => getHostRef(ref)
 export const setValue = (ref: d.RuntimeRef, propName: string, newVal: any, cmpMeta: d.ComponentRuntimeMeta) => {
   // check our new property value against our internal value
   const hostRef = getHostRef(ref);
-  const elm = BUILD.lazyLoad ? hostRef.$hostElement$ : (ref as d.HostElement);
+  const elm = BUILD.lazyLoad ? hostRef.$hostElement$.deref() : (ref as d.HostElement);
+
+  if (elm === undefined) {
+    // this DOM node has left the mortal plane
+    return
+  }
+
   const oldVal = hostRef.$instanceValues$.get(propName);
   const flags = hostRef.$flags$;
   const instance = BUILD.lazyLoad ? hostRef.$lazyInstance$ : (elm as any);

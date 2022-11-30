@@ -43,7 +43,12 @@ export const scheduleUpdate = (hostRef: d.HostRef, isInitialLoad: boolean) => {
  * the component
  */
 const dispatchHooks = (hostRef: d.HostRef, isInitialLoad: boolean): Promise<void> => {
-  const elm = hostRef.$hostElement$;
+  const elm = hostRef.$hostElement$.deref();
+  if (elm === undefined) {
+    // the GC's already done its grim work, we should bow out
+    return
+  }
+
   const endSchedule = createTime('scheduleUpdate', hostRef.$cmpMeta$.$tagName$);
   const instance = BUILD.lazyLoad ? hostRef.$lazyInstance$ : elm;
 
@@ -135,7 +140,14 @@ const isPromisey = (maybePromise: Promise<void> | unknown): maybePromise is Prom
   (maybePromise && (maybePromise as any).then && typeof (maybePromise as Promise<void>).then === 'function');
 
 const updateComponent = async (hostRef: d.HostRef, instance: any, isInitialLoad: boolean) => {
-  const elm = hostRef.$hostElement$ as d.RenderNode;
+  // updateComponent
+  const elm = hostRef.$hostElement$.deref() as d.RenderNode;
+
+  if (elm === undefined) {
+    // DOM node got GC'ed, we gotta bail!
+    return
+  }
+
   const endUpdate = createTime('update', hostRef.$cmpMeta$.$tagName$);
   const rc = elm['s-rc'];
   if (BUILD.style && isInitialLoad) {
@@ -244,7 +256,7 @@ const callRender = (hostRef: d.HostRef, instance: any, elm: HTMLElement) => {
       }
     }
   } catch (e) {
-    consoleError(e, hostRef.$hostElement$);
+    consoleError(e, hostRef.$hostElement$.deref());
   }
   renderingRef = null;
   return null;
@@ -254,7 +266,13 @@ export const getRenderingRef = () => renderingRef;
 
 export const postUpdateComponent = (hostRef: d.HostRef) => {
   const tagName = hostRef.$cmpMeta$.$tagName$;
-  const elm = hostRef.$hostElement$;
+  const elm = hostRef.$hostElement$.deref();
+
+  if (elm === undefined) {
+    // DOM node got GC'ed, let's bail
+    return;
+  }
+
   const endPostUpdate = createTime('postUpdate', tagName);
   const instance = BUILD.lazyLoad ? hostRef.$lazyInstance$ : (elm as any);
   const ancestorComponent = hostRef.$ancestorComponent$;
@@ -339,10 +357,11 @@ export const postUpdateComponent = (hostRef: d.HostRef) => {
   // (⌐■_■)
 };
 
-export const forceUpdate = (ref: any) => {
+export const forceUpdate = (ref: any): boolean => {
   if (BUILD.updatable) {
     const hostRef = getHostRef(ref);
-    const isConnected = hostRef.$hostElement$.isConnected;
+    const hostEl = hostRef.$hostElement$.deref();
+    const isConnected = hostEl?.isConnected ?? false;
     if (
       isConnected &&
       (hostRef.$flags$ & (HOST_FLAGS.hasRendered | HOST_FLAGS.isQueuedForUpdate)) === HOST_FLAGS.hasRendered

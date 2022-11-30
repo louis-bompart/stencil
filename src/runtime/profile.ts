@@ -42,7 +42,12 @@ const inspect = (ref: any) => {
     return undefined;
   }
   const flags = hostRef.$flags$;
-  const hostElement = hostRef.$hostElement$;
+  const hostElement = hostRef.$hostElement$.deref() as d.HostElement;
+
+  if (hostElement === undefined) {
+    // no DOM element here!
+    return undefined;
+  }
   return {
     renderCount: hostRef.$renderCount$,
     flags: {
