@@ -51,7 +51,7 @@ const hostListenerProxy = (hostRef: d.HostRef, methodName: string) => (ev: Event
         (hostRef.$queuedListeners$ = hostRef.$queuedListeners$ || []).push([methodName, ev]);
       }
     } else {
-      (hostRef.$hostElement$ as any)[methodName](ev);
+      (hostRef.$hostElement$.deref() as any)[methodName](ev);
     }
   } catch (e) {
     consoleError(e);
