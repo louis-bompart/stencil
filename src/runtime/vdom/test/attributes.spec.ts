@@ -11,7 +11,7 @@ describe('attributes', () => {
   beforeEach(() => {
     hostElm = document.createElement('div');
     vnode0 = newVNode(null, null);
-    vnode0.$elm$ = hostElm;
+    vnode0.$elm$ = new WeakRef(hostElm);
   });
 
   it('have their provided values', () => {
@@ -47,7 +47,7 @@ describe('attributes', () => {
     hostElm = document.createElement('div');
     hostElm.id = 'myId';
     hostElm.className = 'myClass';
-    vnode0.$elm$ = hostElm;
+    vnode0.$elm$ = new WeakRef(hostElm);
     const vnode1 = h('div', null, 'Hello');
     patch(vnode0, vnode1);
     expect(hostElm.tagName).toEqual('DIV');
@@ -89,7 +89,7 @@ describe('attributes', () => {
       );
 
       hostElm = document.createElementNS(SVG_NS, 'svg') as any;
-      vnode0.$elm$ = hostElm;
+      vnode0.$elm$ = new WeakRef(hostElm);
       patch(vnode0, vnode1);
       expect(hostElm.childNodes.length).toEqual(1);
       expect(hostElm.children[0].getAttribute('href')).toEqual(testUrl);

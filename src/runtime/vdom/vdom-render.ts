@@ -153,7 +153,7 @@ const createElm = (oldParentVNode: d.VNode, newParentVNode: d.VNode, childIndex:
       if (oldVNode && oldVNode.$tag$ === newVNode.$tag$ && oldParentVNode.$elm$) {
         // we've got an old slot vnode and the wrapper is being replaced
         // so let's move the old slot content back to it's original location
-        putBackInOriginalLocation(oldParentVNode.$elm$, false);
+        putBackInOriginalLocation(oldParentVNode.$elm$.deref(), false);
       }
     }
   }
@@ -225,7 +225,7 @@ const addVnodes = (
     if (vnodes[startIdx]) {
       childNode = createElm(null, parentVNode, startIdx, parentElm);
       if (childNode) {
-        vnodes[startIdx].$elm$ = childNode as any;
+        vnodes[startIdx].$elm$ = new WeakRef(childNode as any);
         containerElm.insertBefore(childNode, BUILD.slotRelocation ? referenceNode(before) : before);
       }
     }
@@ -247,7 +247,7 @@ const removeVnodes = (vnodes: d.VNode[], startIdx: number, endIdx: number) => {
   for (let index = startIdx; index <= endIdx; ++index) {
     const vnode = vnodes[index];
     if (vnode) {
-      const elm = vnode.$elm$;
+      const elm = vnode.$elm$.deref();
       nullifyVNodeRefs(vnode);
 
       if (elm) {
@@ -396,7 +396,7 @@ const updateChildren = (parentElm: d.RenderNode, oldCh: d.VNode[], newVNode: d.V
       // In this situation we need to patch `newEndVnode` onto `oldStartVnode`
       // and move the DOM element for `oldStartVnode`.
       if (BUILD.slotRelocation && (oldStartVnode.$tag$ === 'slot' || newEndVnode.$tag$ === 'slot')) {
-        putBackInOriginalLocation(oldStartVnode.$elm$.parentNode, false);
+        putBackInOriginalLocation(oldStartVnode.$elm$.deref().parentNode, false);
       }
       patch(oldStartVnode, newEndVnode);
       // We need to move the element for `oldStartVnode` into a position which
@@ -416,7 +416,7 @@ const updateChildren = (parentElm: d.RenderNode, oldCh: d.VNode[], newVNode: d.V
       // `parentElm`. Luckily, `Node.nextSibling` will return `null` if there
       // aren't any siblings, and passing `null` to `Node.insertBefore` will
       // append it to the children of the parent element.
-      parentElm.insertBefore(oldStartVnode.$elm$, oldEndVnode.$elm$.nextSibling as any);
+      parentElm.insertBefore(oldStartVnode.$elm$.deref(), oldEndVnode.$elm$.deref().nextSibling as any);
       oldStartVnode = oldCh[++oldStartIdx];
       newEndVnode = newCh[--newEndIdx];
     } else if (isSameVnode(oldEndVnode, newStartVnode)) {
@@ -436,7 +436,7 @@ const updateChildren = (parentElm: d.RenderNode, oldCh: d.VNode[], newVNode: d.V
       // children etc) but we also need to move the DOM node to which
       // `oldEndVnode` corresponds.
       if (BUILD.slotRelocation && (oldStartVnode.$tag$ === 'slot' || newEndVnode.$tag$ === 'slot')) {
-        putBackInOriginalLocation(oldEndVnode.$elm$.parentNode, false);
+        putBackInOriginalLocation(oldEndVnode.$elm$.deref().parentNode, false);
       }
       patch(oldEndVnode, newStartVnode);
       // We've already checked above if `oldStartVnode` and `newStartVnode` are
@@ -444,7 +444,7 @@ const updateChildren = (parentElm: d.RenderNode, oldCh: d.VNode[], newVNode: d.V
       // can move the element for `oldEndVnode` _before_ the element for
       // `oldStartVnode`, leaving `oldStartVnode` to be reconciled in the
       // future.
-      parentElm.insertBefore(oldEndVnode.$elm$, oldStartVnode.$elm$);
+      parentElm.insertBefore(oldEndVnode.$elm$.deref(), oldStartVnode.$elm$.deref());
       oldEndVnode = oldCh[--oldEndIdx];
       newStartVnode = newCh[++newStartIdx];
     } else {
@@ -479,7 +479,7 @@ const updateChildren = (parentElm: d.RenderNode, oldCh: d.VNode[], newVNode: d.V
           // invalidate the matching old node so that we won't try to update it
           // again later on
           oldCh[idxInOld] = undefined;
-          node = elmToMove.$elm$;
+          node = elmToMove.$elm$.deref();
         }
 
         newStartVnode = newCh[++newStartIdx];
@@ -495,9 +495,12 @@ const updateChildren = (parentElm: d.RenderNode, oldCh: d.VNode[], newVNode: d.V
       if (node) {
         // if we created a new node then handle inserting it to the DOM
         if (BUILD.slotRelocation) {
-          parentReferenceNode(oldStartVnode.$elm$).insertBefore(node, referenceNode(oldStartVnode.$elm$));
+          parentReferenceNode(oldStartVnode.$elm$.deref()).insertBefore(
+            node,
+            referenceNode(oldStartVnode.$elm$.deref())
+          );
         } else {
-          oldStartVnode.$elm$.parentNode.insertBefore(node, oldStartVnode.$elm$);
+          oldStartVnode.$elm$.deref().parentNode.insertBefore(node, oldStartVnode.$elm$);
         }
       }
     }
@@ -507,7 +510,7 @@ const updateChildren = (parentElm: d.RenderNode, oldCh: d.VNode[], newVNode: d.V
     // we have some more new nodes to add which don't match up with old nodes
     addVnodes(
       parentElm,
-      newCh[newEndIdx + 1] == null ? null : newCh[newEndIdx + 1].$elm$,
+      newCh[newEndIdx + 1] == null ? null : newCh[newEndIdx + 1].$elm$.deref(),
       newVNode,
       newCh,
       newStartIdx,
@@ -574,7 +577,8 @@ const parentReferenceNode = (node: d.RenderNode) => (node['s-ol'] ? node['s-ol']
  * @param newVNode a new VNode representing an updated version of the old one
  */
 export const patch = (oldVNode: d.VNode, newVNode: d.VNode) => {
-  const elm = (newVNode.$elm$ = oldVNode.$elm$);
+  const elm = oldVNode.$elm$.deref();
+  newVNode.$elm$ = oldVNode.$elm$;
   const oldChildren = oldVNode.$children$;
   const newChildren = newVNode.$children$;
   const tag = newVNode.$tag$;
@@ -849,7 +853,7 @@ render() {
   rootVnode.$tag$ = null;
   rootVnode.$flags$ |= VNODE_FLAGS.isHost;
   hostRef.$vnode$ = rootVnode;
-  rootVnode.$elm$ = oldVNode.$elm$ = (BUILD.shadowDom ? hostElm.shadowRoot || hostElm : hostElm) as any;
+  rootVnode.$elm$ = oldVNode.$elm$ = new WeakRef(BUILD.shadowDom ? hostElm.shadowRoot || hostElm : hostElm) as any;
 
   if (BUILD.scoped || BUILD.shadowDom) {
     scopeId = hostElm['s-sc'];
@@ -871,7 +875,7 @@ render() {
     plt.$flags$ |= PLATFORM_FLAGS.isTmpDisconnected;
 
     if (checkSlotRelocate) {
-      relocateSlotContent(rootVnode.$elm$);
+      relocateSlotContent(rootVnode.$elm$.deref());
 
       let relocateData: RelocateNodeData;
       let nodeToRelocate: d.RenderNode;
@@ -947,7 +951,7 @@ render() {
     }
 
     if (checkSlotFallbackVisibility) {
-      updateFallbackSlotVisibility(rootVnode.$elm$);
+      updateFallbackSlotVisibility(rootVnode.$elm$.deref());
     }
 
     // done moving nodes around

@@ -3,4 +3,5 @@ import { getHostRef } from '@platform';
 
 import type * as d from '../declarations';
 
-export const getElement = (ref: any) => BUILD.lazyLoad ? getHostRef(ref).$hostElement$.deref() : (ref as d.HostElement);
+export const getElement = (ref: any) =>
+  BUILD.lazyLoad ? getHostRef(ref).$hostElement$.deref() : (ref as d.HostElement);

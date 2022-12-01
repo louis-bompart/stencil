@@ -12,7 +12,7 @@ describe('renderer', () => {
   beforeEach(() => {
     hostElm = document.createElement('div');
     vnode0 = newVNode(null, null);
-    vnode0.$elm$ = hostElm;
+    vnode0.$elm$ = new WeakRef(hostElm);
   });
 
   describe('created element', () => {
@@ -64,14 +64,14 @@ describe('renderer', () => {
     it('should not affect subsequent created element', () => {
       patch(vnode0, h('div', null, h('div', null, h('svg', null))));
 
-      const vnode1 = toVNode(vnode0.$elm$);
+      const vnode1 = toVNode(vnode0.$elm$.deref());
 
       patch(vnode1, h('div', null, [h('div', null, h('svg', null)), h('div', null)] as any));
 
-      const vnode2 = toVNode(vnode1.$elm$);
-      expect(vnode2.$children$[0].$elm$.tagName).toEqual('DIV');
-      expect(vnode2.$children$[0].$children$[0].$elm$.tagName).toEqual('svg');
-      expect(vnode2.$children$[1].$elm$.tagName).toEqual('DIV');
+      const vnode2 = toVNode(vnode1.$elm$.deref());
+      expect(vnode2.$children$[0].$elm$.deref().tagName).toEqual('DIV');
+      expect(vnode2.$children$[0].$children$[0].$elm$.deref().tagName).toEqual('svg');
+      expect(vnode2.$children$[1].$elm$.deref().tagName).toEqual('DIV');
     });
   });
 });

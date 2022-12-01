@@ -5,11 +5,11 @@ import { newVNode } from '../h';
 export function toVNode(node: Node): d.VNode {
   if (node.nodeType === NODE_TYPE.TextNode) {
     const vnode: d.VNode = newVNode(null, node.textContent);
-    vnode.$elm$ = node;
+    vnode.$elm$ = new WeakRef(node);
     return vnode;
   } else if (node.nodeType === NODE_TYPE.ElementNode) {
     const vnode: d.VNode = newVNode(node.nodeName.toLowerCase(), null);
-    vnode.$elm$ = node;
+    vnode.$elm$ = new WeakRef(node);
 
     const childNodes = node.childNodes;
     let childVnode: d.VNode;

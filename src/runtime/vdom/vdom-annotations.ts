@@ -137,7 +137,7 @@ const insertVNodeAnnotations = (
         ) as d.RenderNode | undefined;
         if (comment) {
           const index: number = parentChildNodes.indexOf(hostElm) - 1;
-          (vnode.$elm$ as d.RenderNode).setAttribute(
+          (vnode.$elm$.deref() as d.RenderNode).setAttribute(
             HYDRATE_CHILD_ID,
             `${comment['s-host-id']}.${comment['s-node-id']}.0.${index}`
           );
@@ -155,7 +155,7 @@ const insertChildVNodeAnnotations = (
   depth: number,
   index: number
 ) => {
-  const childElm = vnodeChild.$elm$ as d.RenderNode;
+  const childElm = vnodeChild.$elm$.deref() as d.RenderNode;
   if (childElm == null) {
     return;
   }

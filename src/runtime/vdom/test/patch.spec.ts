@@ -413,12 +413,12 @@ describe('renderer', () => {
           const b = h('svg', { n: SVG_NS }, h('g', null));
 
           patch(vnode0, a);
-          const resultA = toVNode(vnode0.$elm$);
-          expect(resultA.$elm$.childNodes.length).toEqual(2);
+          const resultA = toVNode(vnode0.$elm$.deref());
+          expect(resultA.$elm$.deref().childNodes.length).toEqual(2);
 
           patch(resultA, b);
-          const resultB = toVNode(resultA.$elm$);
-          expect(resultB.$elm$.childNodes.length).toEqual(1);
+          const resultB = toVNode(resultA.$elm$.deref());
+          expect(resultB.$elm$.deref().childNodes.length).toEqual(1);
         });
       });
 

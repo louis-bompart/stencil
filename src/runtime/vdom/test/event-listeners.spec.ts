@@ -9,7 +9,7 @@ describe('event listeners', () => {
   beforeEach(() => {
     hostElm = document.createElement('div');
     vnode0 = newVNode(null, null);
-    vnode0.$elm$ = hostElm;
+    vnode0.$elm$ = new WeakRef(hostElm);
   });
 
   it('attaches click event handler to element', () => {

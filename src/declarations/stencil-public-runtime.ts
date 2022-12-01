@@ -621,7 +621,7 @@ export declare function h(sel: any, data: VNodeData | null, children: VNode): VN
 export interface VNode {
   $flags$: number;
   $tag$: string | number | Function;
-  $elm$: any;
+  $elm$: WeakRef<any>;
   $text$: string;
   $children$: VNode[];
   $attrs$?: any;

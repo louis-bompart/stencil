@@ -21,7 +21,7 @@ describe('updateElement', () => {
     const newNode: d.VNode = {
       ...newVNode('div', ''),
       $flags$: 0,
-      $elm$: elm,
+      $elm$: new WeakRef(elm),
       $attrs$: { class: 'mr fusion' },
     };
     updateElement(oldVNode, newNode, false);
@@ -37,7 +37,7 @@ describe('updateElement', () => {
     });
     const newVnode = createTestNode({
       $flags$: 0,
-      $elm$: elm,
+      $elm$: new WeakRef(elm),
     });
     updateElement(oldVNode, newVnode, false);
     expect(elm.className).toBe('');
@@ -52,7 +52,7 @@ describe('updateElement', () => {
     });
     const newVnode = createTestNode({
       $flags$: 0,
-      $elm$: elm,
+      $elm$: new WeakRef(elm),
       $attrs$: { class: 'mr fusion' },
     });
     updateElement(oldVNode, newVnode, false);
@@ -63,7 +63,7 @@ describe('updateElement', () => {
     const elm = document.createElement('my-tag') as HTMLElement;
     const oldVNode: d.VNode = newVNode(null, null);
     const newVnode: d.VNode = newVNode(null, null);
-    newVnode.$elm$ = elm;
+    newVnode.$elm$ = new WeakRef(elm);
     newVnode.$attrs$ = { class: 'mr fusion' };
     updateElement(oldVNode, newVnode, false);
     expect(elm.className).toBe('mr fusion');
@@ -74,7 +74,7 @@ describe('updateElement', () => {
     const oldVNode: d.VNode = null;
     const newVnode = createTestNode({
       $flags$: 0,
-      $elm$: elm,
+      $elm$: new WeakRef(elm),
       $attrs$: { class: 'mr fusion' },
     });
     updateElement(oldVNode, newVnode, false);
@@ -87,7 +87,7 @@ describe('updateElement', () => {
       const oldVNode: d.VNode = null;
       const newVnode = createTestNode({
         $flags$: 0,
-        $elm$: elm,
+        $elm$: new WeakRef(elm),
       });
       updateElement(oldVNode, newVnode, false);
     }).not.toThrow();
@@ -134,7 +134,7 @@ describe('updateElement', () => {
     const oldVNode: d.VNode = null;
     const newVnode = createTestNode({
       $flags$: 0,
-      $elm$: elm,
+      $elm$: new WeakRef(elm),
       $attrs$: {
         class: 'mr fusion',
         style: { color: 'gray' },
@@ -151,7 +151,7 @@ describe('updateElement', () => {
     const initialVNode: d.VNode = null;
     const firstVNode = createTestNode({
       $flags$: 0,
-      $elm$: elm,
+      $elm$: new WeakRef(elm),
       $attrs$: {
         content: 'attributes removed',
         padding: false,
@@ -161,7 +161,7 @@ describe('updateElement', () => {
     });
     const secondVNode = createTestNode({
       $flags$: 0,
-      $elm$: elm,
+      $elm$: new WeakRef(elm),
       $attrs$: {
         content: 'attributes added',
         padding: true,

@@ -39,7 +39,7 @@ export const initializeClientHydrate = (
   childRenderNodes.map((c) => {
     const orgLocationId = c.$hostId$ + '.' + c.$nodeId$;
     const orgLocationNode = plt.$orgLocNodes$.get(orgLocationId);
-    const node = c.$elm$ as d.RenderNode;
+    const node = c.$elm$.deref() as d.RenderNode;
 
     if (orgLocationNode && supportsShadow && orgLocationNode['s-en'] === '') {
       orgLocationNode.parentNode.insertBefore(node, orgLocationNode.nextSibling);
@@ -96,7 +96,7 @@ const clientHydrate = (
           $depth$: childIdSplt[2],
           $index$: childIdSplt[3],
           $tag$: node.tagName.toLowerCase(),
-          $elm$: node,
+          $elm$: new WeakRef(node),
           $attrs$: null,
           $children$: null,
           $key$: null,
@@ -120,7 +120,7 @@ const clientHydrate = (
         parentVNode = childVNode;
 
         if (shadowRootNodes && childVNode.$depth$ === '0') {
-          shadowRootNodes[childVNode.$index$ as any] = childVNode.$elm$;
+          shadowRootNodes[childVNode.$index$ as any] = childVNode.$elm$.deref();
         }
       }
     }
@@ -166,7 +166,7 @@ const clientHydrate = (
         $nodeId$: childIdSplt[2],
         $depth$: childIdSplt[3],
         $index$: childIdSplt[4],
-        $elm$: node,
+        $elm$: new WeakRef(node),
         $attrs$: null,
         $children$: null,
         $key$: null,
@@ -177,8 +177,8 @@ const clientHydrate = (
 
       if (childNodeType === TEXT_NODE_ID) {
         childVNode.$elm$ = node.nextSibling as any;
-        if (childVNode.$elm$ && childVNode.$elm$.nodeType === NODE_TYPE.TextNode) {
-          childVNode.$text$ = childVNode.$elm$.textContent;
+        if (childVNode.$elm$ && childVNode.$elm$.deref().nodeType === NODE_TYPE.TextNode) {
+          childVNode.$text$ = childVNode.$elm$.deref().textContent;
           childRenderNodes.push(childVNode);
 
           // remove the text comment since it's no longer needed
@@ -190,7 +190,7 @@ const clientHydrate = (
           parentVNode.$children$[childVNode.$index$ as any] = childVNode;
 
           if (shadowRootNodes && childVNode.$depth$ === '0') {
-            shadowRootNodes[childVNode.$index$ as any] = childVNode.$elm$;
+            shadowRootNodes[childVNode.$index$ as any] = childVNode.$elm$.deref();
           }
         }
       } else if (childVNode.$hostId$ === hostId) {
@@ -210,21 +210,21 @@ const clientHydrate = (
           if (BUILD.shadowDom && shadowRootNodes) {
             // browser support shadowRoot and this is a shadow dom component
             // create an actual slot element
-            childVNode.$elm$ = doc.createElement(childVNode.$tag$);
+            childVNode.$elm$ = new WeakRef(doc.createElement(childVNode.$tag$));
 
             if (childVNode.$name$) {
               // add the slot name attribute
-              childVNode.$elm$.setAttribute('name', childVNode.$name$);
+              childVNode.$elm$.deref().setAttribute('name', childVNode.$name$);
             }
 
             // insert the new slot element before the slot comment
-            node.parentNode.insertBefore(childVNode.$elm$, node);
+            node.parentNode.insertBefore(childVNode.$elm$.deref(), node);
 
             // remove the slot comment since it's not needed for shadow
             node.remove();
 
             if (childVNode.$depth$ === '0') {
-              shadowRootNodes[childVNode.$index$ as any] = childVNode.$elm$;
+              shadowRootNodes[childVNode.$index$ as any] = childVNode.$elm$.deref();
             }
           }
 
