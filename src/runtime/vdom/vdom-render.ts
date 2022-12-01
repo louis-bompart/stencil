@@ -815,7 +815,7 @@ export const renderVdom = (hostRef: d.HostRef, renderFnResults: d.VNode | d.VNod
 
   if (hostElm === undefined) {
     // DOM node got GC'ed, let's get out of here
-    return
+    return;
   }
 
   const cmpMeta = hostRef.$cmpMeta$;

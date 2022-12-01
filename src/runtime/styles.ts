@@ -110,7 +110,7 @@ export const attachStyles = (hostRef: d.HostRef) => {
 
   if (elm === undefined) {
     // RIP this DOM node
-    return
+    return;
   }
 
   const flags = cmpMeta.$flags$;

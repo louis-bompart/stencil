@@ -46,7 +46,7 @@ const dispatchHooks = (hostRef: d.HostRef, isInitialLoad: boolean): Promise<void
   const elm = hostRef.$hostElement$.deref();
   if (elm === undefined) {
     // the GC's already done its grim work, we should bow out
-    return
+    return;
   }
 
   const endSchedule = createTime('scheduleUpdate', hostRef.$cmpMeta$.$tagName$);
@@ -145,7 +145,7 @@ const updateComponent = async (hostRef: d.HostRef, instance: any, isInitialLoad:
 
   if (elm === undefined) {
     // DOM node got GC'ed, we gotta bail!
-    return
+    return;
   }
 
   const endUpdate = createTime('update', hostRef.$cmpMeta$.$tagName$);

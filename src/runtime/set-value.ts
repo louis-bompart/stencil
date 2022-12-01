@@ -15,7 +15,7 @@ export const setValue = (ref: d.RuntimeRef, propName: string, newVal: any, cmpMe
 
   if (elm === undefined) {
     // this DOM node has left the mortal plane
-    return
+    return;
   }
 
   const oldVal = hostRef.$instanceValues$.get(propName);
