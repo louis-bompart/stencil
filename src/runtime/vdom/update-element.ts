@@ -14,10 +14,11 @@ export const updateElement = (
   // if the element passed in is a shadow root, which is a document fragment
   // then we want to be adding attrs/props to the shadow root's "host" element
   // if it's not a shadow root, then we add attrs/props to the same element
+  // TODO why is `$elm$.deref` not a function on first load here?
   const elm =
     newVnode.$elm$.deref().nodeType === NODE_TYPE.DocumentFragment && newVnode.$elm$.deref().host
       ? newVnode.$elm$.deref().host
-      : (newVnode.$elm$ as any);
+      : (newVnode.$elm$.deref() as any);
   const oldVnodeAttrs = (oldVnode && oldVnode.$attrs$) || EMPTY_OBJ;
   const newVnodeAttrs = newVnode.$attrs$ || EMPTY_OBJ;
 

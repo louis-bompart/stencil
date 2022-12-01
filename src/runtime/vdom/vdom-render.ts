@@ -31,14 +31,14 @@ let isSvgMode = false;
  * @param childIndex the index of the VNode, in the _new_ parent node's
  * children, for which we will create a new DOM node
  * @param parentElm the parent DOM node which our new node will be a child of
- * @returns the newly created node
+ * @returns a weak reference to the newly created node
  */
-const createElm = (oldParentVNode: d.VNode, newParentVNode: d.VNode, childIndex: number, parentElm: d.RenderNode) => {
+const createElm = (oldParentVNode: d.VNode, newParentVNode: d.VNode, childIndex: number, parentElm: d.RenderNode): WeakRef<d.RenderNode> => {
   // tslint:disable-next-line: prefer-const
   const newVNode = newParentVNode.$children$[childIndex];
   let i = 0;
-  let elm: d.RenderNode;
-  let childNode: d.RenderNode;
+  let elm: WeakRef<d.RenderNode>;
+  let childNode: WeakRef<d.RenderNode>;
   let oldVNode: d.VNode;
 
   if (BUILD.slotRelocation && !useNativeShadowDom) {
@@ -72,17 +72,19 @@ const createElm = (oldParentVNode: d.VNode, newParentVNode: d.VNode, childIndex:
 
   if (BUILD.vdomText && newVNode.$text$ !== null) {
     // create text node
-    elm = newVNode.$elm$ = doc.createTextNode(newVNode.$text$) as any;
+    elm = newVNode.$elm$ = new WeakRef(doc.createTextNode(newVNode.$text$)) as any;
   } else if (BUILD.slotRelocation && newVNode.$flags$ & VNODE_FLAGS.isSlotReference) {
     // create a slot reference node
-    elm = newVNode.$elm$ =
-      BUILD.isDebug || BUILD.hydrateServerSide ? slotReferenceDebugNode(newVNode) : (doc.createTextNode('') as any);
+    // @ts-ignore TODO Fix this too
+    elm = newVNode.$elm$ = new WeakRef(
+      BUILD.isDebug || BUILD.hydrateServerSide ? slotReferenceDebugNode(newVNode) : (doc.createTextNode('') as any)
+    );
   } else {
     if (BUILD.svg && !isSvgMode) {
       isSvgMode = newVNode.$tag$ === 'svg';
     }
     // create element
-    elm = newVNode.$elm$ = (
+    elm = newVNode.$elm$ = new WeakRef(
       BUILD.svg
         ? doc.createElementNS(
             isSvgMode ? SVG_NS : HTML_NS,
@@ -105,21 +107,21 @@ const createElm = (oldParentVNode: d.VNode, newParentVNode: d.VNode, childIndex:
       updateElement(null, newVNode, isSvgMode);
     }
 
-    if ((BUILD.shadowDom || BUILD.scoped) && isDef(scopeId) && elm['s-si'] !== scopeId) {
+    if ((BUILD.shadowDom || BUILD.scoped) && isDef(scopeId) && elm.deref()['s-si'] !== scopeId) {
       // if there is a scopeId and this is the initial render
       // then let's add the scopeId as a css class
-      elm.classList.add((elm['s-si'] = scopeId));
+      elm.deref().classList.add((elm.deref()['s-si'] = scopeId));
     }
 
     if (newVNode.$children$) {
       for (i = 0; i < newVNode.$children$.length; ++i) {
         // create the node
-        childNode = createElm(oldParentVNode, newVNode, i, elm);
+        childNode = createElm(oldParentVNode, newVNode, i, elm.deref());
 
         // return node could have been null
         if (childNode) {
           // append our new node
-          elm.appendChild(childNode);
+          elm.deref().appendChild(childNode.deref());
         }
       }
     }
@@ -128,7 +130,7 @@ const createElm = (oldParentVNode: d.VNode, newParentVNode: d.VNode, childIndex:
       if (newVNode.$tag$ === 'svg') {
         // Only reset the SVG context when we're exiting <svg> element
         isSvgMode = false;
-      } else if (elm.tagName === 'foreignObject') {
+      } else if (elm.deref().tagName === 'foreignObject') {
         // Reenter SVG context when we're exiting <foreignObject> element
         isSvgMode = true;
       }
@@ -136,17 +138,17 @@ const createElm = (oldParentVNode: d.VNode, newParentVNode: d.VNode, childIndex:
   }
 
   if (BUILD.slotRelocation) {
-    elm['s-hn'] = hostTagName;
+    elm.deref()['s-hn'] = hostTagName;
 
     if (newVNode.$flags$ & (VNODE_FLAGS.isSlotFallback | VNODE_FLAGS.isSlotReference)) {
       // remember the content reference comment
-      elm['s-sr'] = true;
+      elm.deref()['s-sr'] = true;
 
       // remember the content reference comment
-      elm['s-cr'] = contentRef;
+      elm.deref()['s-cr'] = contentRef;
 
       // remember the slot name, or empty string for default slot
-      elm['s-sn'] = newVNode.$name$ || '';
+      elm.deref()['s-sn'] = newVNode.$name$ || '';
 
       // check if we've got an old vnode for this slot
       oldVNode = oldParentVNode && oldParentVNode.$children$ && oldParentVNode.$children$[childIndex];
@@ -161,10 +163,10 @@ const createElm = (oldParentVNode: d.VNode, newParentVNode: d.VNode, childIndex:
   return elm;
 };
 
-const putBackInOriginalLocation = (parentElm: Node, recursive: boolean) => {
+const putBackInOriginalLocation = (parentElm: WeakRef<Node>, recursive: boolean) => {
   plt.$flags$ |= PLATFORM_FLAGS.isTmpDisconnected;
 
-  const oldSlotChildNodes = parentElm.childNodes;
+  const oldSlotChildNodes = parentElm.deref().childNodes;
   for (let i = oldSlotChildNodes.length - 1; i >= 0; i--) {
     const childNode = oldSlotChildNodes[i] as any;
     if (childNode['s-hn'] !== hostTagName && childNode['s-ol']) {
@@ -215,9 +217,9 @@ const addVnodes = (
   startIdx: number,
   endIdx: number
 ) => {
-  let containerElm = ((BUILD.slotRelocation && parentElm['s-cr'] && parentElm['s-cr'].parentNode) || parentElm) as any;
-  let childNode: Node;
-  if (BUILD.shadowDom && (containerElm as any).shadowRoot && containerElm.tagName === hostTagName) {
+  let containerElm = ((BUILD.slotRelocation && parentElm['s-cr'] && parentElm['s-cr'].parentNode) || parentElm);
+  let childNode: WeakRef<Node>;
+  if (BUILD.shadowDom && (containerElm as any).shadowRoot && (containerElm as any).tagName === hostTagName) {
     containerElm = (containerElm as any).shadowRoot;
   }
 
@@ -225,8 +227,8 @@ const addVnodes = (
     if (vnodes[startIdx]) {
       childNode = createElm(null, parentVNode, startIdx, parentElm);
       if (childNode) {
-        vnodes[startIdx].$elm$ = new WeakRef(childNode as any);
-        containerElm.insertBefore(childNode, BUILD.slotRelocation ? referenceNode(before) : before);
+        vnodes[startIdx].$elm$ = childNode;
+        containerElm.insertBefore(childNode.deref(), BUILD.slotRelocation ? referenceNode(before) : before);
       }
     }
   }
@@ -352,7 +354,7 @@ const updateChildren = (parentElm: d.RenderNode, oldCh: d.VNode[], newVNode: d.V
   let newEndIdx = newCh.length - 1;
   let newStartVnode = newCh[0];
   let newEndVnode = newCh[newEndIdx];
-  let node: Node;
+  let node: WeakRef<Node>;
   let elmToMove: d.VNode;
 
   while (oldStartIdx <= oldEndIdx && newStartIdx <= newEndIdx) {
@@ -496,7 +498,7 @@ const updateChildren = (parentElm: d.RenderNode, oldCh: d.VNode[], newVNode: d.V
         // if we created a new node then handle inserting it to the DOM
         if (BUILD.slotRelocation) {
           parentReferenceNode(oldStartVnode.$elm$.deref()).insertBefore(
-            node,
+            node.deref(),
             referenceNode(oldStartVnode.$elm$.deref())
           );
         } else {

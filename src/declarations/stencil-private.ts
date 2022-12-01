@@ -1731,7 +1731,7 @@ export interface HostRef {
   $cmpMeta$: ComponentRuntimeMeta;
   $hostElement$?: WeakRef<HostElement>;
   $instanceValues$?: Map<string, any>;
-  $lazyInstance$?: ComponentInterface;
+  $lazyInstance$?: WeakRef<ComponentInterface>;
   $onReadyPromise$?: Promise<any>;
   $onReadyResolve$?: (elm: any) => void;
   $onInstancePromise$?: Promise<any>;

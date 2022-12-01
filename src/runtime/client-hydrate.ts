@@ -176,7 +176,7 @@ const clientHydrate = (
       };
 
       if (childNodeType === TEXT_NODE_ID) {
-        childVNode.$elm$ = node.nextSibling as any;
+        childVNode.$elm$ = new WeakRef(node.nextSibling);
         if (childVNode.$elm$ && childVNode.$elm$.deref().nodeType === NODE_TYPE.TextNode) {
           childVNode.$text$ = childVNode.$elm$.deref().textContent;
           childRenderNodes.push(childVNode);
@@ -247,8 +247,9 @@ const clientHydrate = (
       }
     }
   } else if (parentVNode && parentVNode.$tag$ === 'style') {
-    const vnode = newVNode(null, node.textContent) as any;
-    vnode.$elm$ = node;
+    const vnode = newVNode(null, node.textContent);
+    vnode.$elm$ = new WeakRef(node);
+    // @ts-ignore TODO fix this
     vnode.$index$ = '0';
     parentVNode.$children$ = [vnode];
   }
