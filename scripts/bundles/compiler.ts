@@ -160,10 +160,11 @@ export async function compiler(opts: BuildOptions) {
       parse5Plugin(opts),
       sizzlePlugin(opts),
       aliasPlugin(opts),
-      sysModulesPlugin(inputDir),
+
+      // sysModulesPlugin(inputDir),
       rollupNodeResolve({
         mainFields: ['module', 'main'],
-        preferBuiltins: false,
+        preferBuiltins: true,
       }),
       rollupCommonjs({
         transformMixedEsModules: false,
