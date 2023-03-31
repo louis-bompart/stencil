@@ -15,7 +15,7 @@ concurrency:
 jobs:
   build_core:
     name: Build
-    uses: ./.github/workflows/esbuild-build.yml
+    uses: ./.github/workflows/build-esbuild.yml
 
 #   lint_and_format:
 #     name: Lint and Format
