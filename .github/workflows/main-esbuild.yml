@@ -16,7 +16,6 @@ jobs:
   build_core:
     name: Build
     uses: ./.github/workflows/build-esbuild.yml
-
 #   lint_and_format:
 #     name: Lint and Format
 #     uses: ./.github/workflows/lint-and-format.yml
