@@ -21,8 +21,8 @@ export async function buildCli(opts: BuildOptions) {
   const buildDir = join(opts.buildDir, 'cli');
 
   const outputDir = opts.output.cliDir;
-  const esmFilename = join(outputDir, 'index.js');
-  const cjsFilename = join(outputDir, 'index.cjs');
+  const esmFilename = 'index.js'
+  const cjsFilename = 'index.cjs'
 
   const dtsFilename = 'index.d.ts';
 
@@ -34,7 +34,6 @@ export async function buildCli(opts: BuildOptions) {
     entryPoints: [join(inputDir, 'index.ts')],
     bundle: true,
     platform: 'node',
-    outfile: esmFilename,
     logLevel: 'info',
     sourcemap: 'linked',
     external,
@@ -44,14 +43,14 @@ export async function buildCli(opts: BuildOptions) {
   // ESM build
   await esbuild.build({
     ...cliEsbuildOptions,
-    outfile: esmFilename,
+    outfile: join(outputDir, esmFilename),
     format: 'esm',
   });
 
   // CommonJS build
   await esbuild.build({
     ...cliEsbuildOptions,
-    outfile: cjsFilename,
+    outfile: join(outputDir, cjsFilename),
     format: 'cjs',
   });
 
@@ -65,7 +64,7 @@ export async function buildCli(opts: BuildOptions) {
   configDts = configDts.replace('@stencil/core/declarations', '../internal/index');
   await fs.writeFile(join(opts.output.cliDir, 'config-flags.d.ts'), configDts);
 
-  // write @stencil/core/compiler/package.json
+  // write cli/package.json
   writePkgJson(opts, opts.output.cliDir, {
     name: '@stencil/core/cli',
     description: 'Stencil CLI.',
