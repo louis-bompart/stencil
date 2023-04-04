@@ -6,7 +6,7 @@ on:
     # https://docs.github.com/en/actions/using-workflows/reusing-workflows
     inputs:
       build_name:
-        description: Filename for the uploaded Stencil build artifact
+        description: Name for the build, used to resolve the correct build artifact
         required: true
         type: string
 
