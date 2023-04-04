@@ -32,10 +32,12 @@ jobs:
   #   needs: [build_core]
   #   uses: ./.github/workflows/test-component-starter.yml
 
-  # e2e_tests:
-  #   name: E2E Tests (Esbuild)
-  #   needs: [build_core]
-  #   uses: ./.github/workflows/test-e2e.yml
+  e2e_tests:
+    name: E2E Tests (Esbuild)
+    needs: [build_core]
+    uses: ./.github/workflows/test-e2e.yml
+    with:
+      build_name: stencil-core-esbuild
 
   unit_tests:
     name: Unit Tests (Esbuild)
