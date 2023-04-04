@@ -41,6 +41,8 @@ jobs:
     name: Component Starter Smoke Test
     needs: [build_core]
     uses: ./.github/workflows/test-component-starter.yml
+    with:
+      build_name: stencil-core
 
   e2e_tests:
     name: E2E Tests

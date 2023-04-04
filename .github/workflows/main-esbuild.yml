@@ -31,10 +31,12 @@ jobs:
     with:
       build_name: stencil-core-esbuild
 
-  # component_starter_tests:
-  #   name: Component Starter Smoke Test (Esbuild)
-  #   needs: [build_core]
-  #   uses: ./.github/workflows/test-component-starter.yml
+  component_starter_tests:
+    name: Component Starter Smoke Test (Esbuild)
+    needs: [build_core]
+    uses: ./.github/workflows/test-component-starter.yml
+    with:
+      build_name: stencil-core-esbuild
 
   e2e_tests:
     name: E2E Tests (Esbuild)
