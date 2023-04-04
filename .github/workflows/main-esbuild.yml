@@ -24,10 +24,12 @@ jobs:
     with:
       build_name: stencil-core-esbuild
 
-  # bundler_tests:
-  #   name: Bundler Tests (Esbuild)
-  #   needs: [build_core]
-  #   uses: ./.github/workflows/test-bundlers.yml
+  bundler_tests:
+    name: Bundler Tests (Esbuild)
+    needs: [build_core]
+    uses: ./.github/workflows/test-bundlers.yml
+    with:
+      build_name: stencil-core-esbuild
 
   # component_starter_tests:
   #   name: Component Starter Smoke Test (Esbuild)

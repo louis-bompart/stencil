@@ -34,6 +34,8 @@ jobs:
     name: Bundler Tests
     needs: [build_core]
     uses: ./.github/workflows/test-bundlers.yml
+    with:
+      build_name: stencil-core
 
   component_starter_tests:
     name: Component Starter Smoke Test
