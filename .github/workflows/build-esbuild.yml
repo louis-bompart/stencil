@@ -25,7 +25,6 @@ jobs:
         run: npm run build.esbuild -- --ci
         shell: bash
 
-      # TODO fix this!
       # - name: Validate Build
       #   run: npm run test.dist
       #   shell: bash
@@ -34,9 +33,9 @@ jobs:
       #   run: npm run test.testing
       #   shell: bash
 
-      # - name: Upload Build Artifacts
-      #   uses: ./.github/workflows/actions/upload-archive
-      #   with:
-      #     name: stencil-core-esbuild
-      #     output: stencil-core-esbuild.zip
-      #     paths: build cli compiler dev-server internal mock-doc scripts/build screenshot sys testing
+      - name: Upload Build Artifacts
+        uses: ./.github/workflows/actions/upload-archive
+        with:
+          name: stencil-core-esbuild
+          output: stencil-core-esbuild.zip
+          paths: build cli compiler dev-server internal mock-doc scripts/build screenshot sys testing
