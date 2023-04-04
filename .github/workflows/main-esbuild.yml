@@ -42,4 +42,4 @@ jobs:
     needs: [build_core]
     uses: ./.github/workflows/test-unit.yml
     with:
-      build_artifact_filename: 'stencil-core-esbuild.zip'
+      build_name: stencil-core-esbuild
