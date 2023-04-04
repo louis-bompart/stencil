@@ -17,10 +17,12 @@ jobs:
     name: Build
     uses: ./.github/workflows/build-esbuild.yml
 
-  # analysis_tests:
-  #   name: Analysis Tests (Esbuild)
-  #   needs: [build_core]
-  #   uses: ./.github/workflows/test-analysis.yml
+  analysis_tests:
+    name: Analysis Tests (Esbuild)
+    needs: [build_core]
+    uses: ./.github/workflows/test-analysis.yml
+    with:
+      build_name: stencil-core-esbuild
 
   # bundler_tests:
   #   name: Bundler Tests (Esbuild)
