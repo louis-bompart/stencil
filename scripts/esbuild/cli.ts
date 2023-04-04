@@ -10,8 +10,7 @@ import { getEsbuildAliases, getEsbuildExternalModules } from './util';
 /**
  * Runs esbuild to bundle the `cli` submodule
  *
- * @param opts build options needed to generate the rollup configuration
- * @returns an array containing the generated rollup options
+ * @param opts build options
  */
 export async function buildCli(opts: BuildOptions) {
   // clear out rollup stuff
