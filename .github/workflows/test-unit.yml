@@ -4,6 +4,11 @@ on:
   workflow_call:
     # Make this a reusable workflow, no value needed
     # https://docs.github.com/en/actions/using-workflows/reusing-workflows
+    inputs:
+      build_artifact_filename:
+        description: Filename for the uploaded Stencil build artifact
+        required: true
+        type: string
 
 jobs:
   unit_test:
@@ -32,7 +37,7 @@ jobs:
         with:
           name: stencil-core
           path: .
-          filename: stencil-core-build.zip
+          filename: '${{ github.event.inputs.build_artifact_filename }}'
 
       - name: Unit Tests
         run: npm run test.jest
