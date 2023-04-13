@@ -36,6 +36,10 @@ export function getEsbuildAliases(opts: BuildOptions): Record<string, string> {
 /**
  * Node modules which should be universally marked as external
  *
+ * Note that we should not rely on this to mark node.js built-in modules as
+ * external. Doing so will override esbuild's automatic marking of those modules
+ * as side-effect-free, which allows imports from them to be properly
+ * tree-shaked.
  */
 const externalNodeModules = [
   '@jest/core',
@@ -46,9 +50,7 @@ const externalNodeModules = [
   'child_process',
   'console',
   'constants',
-  'crypto',
   'expect',
-  'fs',
   'fsevents',
   'inspector',
   'jest',
@@ -58,9 +60,6 @@ const externalNodeModules = [
   'jest-pnp-resolver',
   'jest-runner',
   'net',
-  'os',
-  'path',
-  'process',
   'puppeteer',
   'puppeteer-core',
   'readline',
