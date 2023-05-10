@@ -1,6 +1,3 @@
-const path = require('path');
-const testingDir = path.join(__dirname, 'testing');
-
 module.exports = {
   moduleNameMapper: {
     '@app-data': '<rootDir>/internal/app-data/index.cjs',
@@ -51,8 +48,8 @@ module.exports = {
   ],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'mjs', 'jsx', 'json', 'd.ts'],
   modulePathIgnorePatterns: ['/bin', '/www'],
-  setupFilesAfterEnv: [path.join(testingDir, 'jest-setuptestframework.js')],
-  testEnvironment: path.join(testingDir, 'jest-environment.js'),
+  setupFilesAfterEnv: ['<rootDir>/testing/jest-setuptestframework.js'],
+  testEnvironment: '<rootDir>/testing/jest-environment.js',
   testPathIgnorePatterns: [
     '<rootDir>/.cache/',
     '<rootDir>/.github/',
@@ -76,7 +73,7 @@ module.exports = {
   // TODO(STENCIL-307): Move away from Jasmine runner for internal Stencil tests as a part of the Jest 28+ upgrade
   testRunner: 'jest-jasmine2',
   transform: {
-    '^.+\\.(ts|tsx|jsx|css|mjs)$': path.join(testingDir, 'jest-preprocessor.js'),
+    '^.+\\.(ts|tsx|jsx|css|mjs)$': '<rootDir>/testing/jest-preprocessor.js',
   },
   watchPathIgnorePatterns: ['^.+\\.d\\.ts$'],
 };
