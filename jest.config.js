@@ -1,6 +1,5 @@
 const path = require('path');
 const testingDir = path.join(__dirname, 'testing');
-const moduleExtensions = ['ts', 'tsx', 'js', 'mjs', 'jsx'];
 
 module.exports = {
   moduleNameMapper: {
@@ -50,7 +49,7 @@ module.exports = {
     '<rootDir>/src/testing/**/*.{js,jsx,ts,tsx}',
     '<rootDir>/src/utils/**/*.{js,jsx,ts,tsx}',
   ],
-  moduleFileExtensions: [...moduleExtensions, 'json', 'd.ts'],
+  moduleFileExtensions: ['ts', 'tsx', 'js', 'mjs', 'jsx', 'json', 'd.ts'],
   modulePathIgnorePatterns: ['/bin', '/www'],
   setupFilesAfterEnv: [path.join(testingDir, 'jest-setuptestframework.js')],
   testEnvironment: path.join(testingDir, 'jest-environment.js'),
