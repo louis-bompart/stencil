@@ -1,5 +1,11 @@
+const path = require('path');
+const rootDir = __dirname;
+const testingDir = path.join(rootDir, 'testing');
+const internalDir = path.join(rootDir, 'internal');
+
+const moduleExtensions = ['ts', 'tsx', 'js', 'mjs', 'jsx'];
+
 module.exports = {
-  preset: './testing/jest-preset.js',
   moduleNameMapper: {
     '@app-data': '<rootDir>/internal/app-data/index.cjs',
     '@app-globals': '<rootDir>/internal/app-globals/index.cjs',
@@ -12,6 +18,17 @@ module.exports = {
     '@sys-api-node': '<rootDir>/sys/node/index.js',
     '@utils': '<rootDir>/src/utils',
     '^typescript$': '<rootDir>/scripts/build/typescript-modified-for-jest.js',
+    // TODO: Comment why we need or remove
+    '^@stencil/core/cli$': path.join(rootDir, 'cli', 'index.js'),
+    '^@stencil/core/compiler$': path.join(rootDir, 'compiler', 'stencil.js'),
+    '^@stencil/core/internal$': path.join(internalDir, 'testing', 'index.js'),
+    '^@stencil/core/internal/app-data$': path.join(internalDir, 'app-data', 'index.cjs'),
+    '^@stencil/core/internal/app-globals$': path.join(internalDir, 'app-globals', 'index.js'),
+    '^@stencil/core/internal/testing$': path.join(internalDir, 'testing', 'index.js'),
+    '^@stencil/core/mock-doc$': path.join(rootDir, 'mock-doc', 'index.cjs'),
+    '^@stencil/core/sys$': path.join(rootDir, 'sys', 'node', 'index.js'),
+    '^@stencil/core/testing$': path.join(testingDir, 'index.js'),
+    '^@stencil/core$': path.join(internalDir, 'testing', 'index.js'),
   },
   coverageDirectory: './coverage/',
   coverageReporters: ['json', 'lcov', 'text', 'clover'],
@@ -36,7 +53,10 @@ module.exports = {
     '<rootDir>/src/testing/**/*.{js,jsx,ts,tsx}',
     '<rootDir>/src/utils/**/*.{js,jsx,ts,tsx}',
   ],
+  moduleFileExtensions: [...moduleExtensions, 'json', 'd.ts'],
   modulePathIgnorePatterns: ['/bin', '/www'],
+  setupFilesAfterEnv: [path.join(testingDir, 'jest-setuptestframework.js')],
+  testEnvironment: path.join(testingDir, 'jest-environment.js'),
   testPathIgnorePatterns: [
     '<rootDir>/.cache/',
     '<rootDir>/.github/',
@@ -60,4 +80,8 @@ module.exports = {
   // TODO(STENCIL-307): Move away from Jasmine runner for internal Stencil tests, which involves re-working environment
   // setup
   testRunner: 'jest-jasmine2',
+  transform: {
+    '^.+\\.(ts|tsx|jsx|css|mjs)$': path.join(testingDir, 'jest-preprocessor.js'),
+  },
+  watchPathIgnorePatterns: ['^.+\\.d\\.ts$'],
 };
