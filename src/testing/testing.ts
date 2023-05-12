@@ -24,14 +24,14 @@ export const createTesting = async (config: ValidatedConfig): Promise<Testing> =
   const { createCompiler } = require('../compiler/stencil.js');
   const compiler: Compiler = await createCompiler(config);
 
-  let devServer: DevServer;
-  let puppeteerBrowser: puppeteer.Browser;
+  let devServer: DevServer | null;
+  let puppeteerBrowser: puppeteer.Browser | null;
 
   const run = async (opts: TestingRunOptions = {}) => {
     let doScreenshots = false;
     let passed = false;
     let env: E2EProcessEnv;
-    let compilerWatcher: CompilerWatcher = null;
+    let compilerWatcher: CompilerWatcher | null = null;
     const msg: string[] = [];
 
     try {
@@ -72,7 +72,7 @@ export const createTesting = async (config: ValidatedConfig): Promise<Testing> =
         // e2e tests only
         // do a build, start a dev server
         // and spin up a puppeteer browser
-        let buildTask: Promise<CompilerBuildResults> = null;
+        let buildTask: Promise<CompilerBuildResults> | null = null;
 
         (config.outputTargets as OutputTargetWww[]).forEach((outputTarget) => {
           outputTarget.empty = false;
@@ -97,9 +97,11 @@ export const createTesting = async (config: ValidatedConfig): Promise<Testing> =
           }
         }
 
-        config.devServer.openBrowser = false;
-        config.devServer.gzip = false;
-        config.devServer.reloadStrategy = null;
+        if (config.devServer) {
+          config.devServer.openBrowser = false;
+          config.devServer.gzip = false;
+          config.devServer.reloadStrategy = null;
+        }
 
         const startupResults = await Promise.all([
           start(config.devServer, config.logger),
@@ -126,7 +128,7 @@ export const createTesting = async (config: ValidatedConfig): Promise<Testing> =
 
           const styleUrl = getAppStyleUrl(config, devServer.browserUrl);
           if (styleUrl) {
-            env.__STENCIL_APP_STYLE_URL__ = getAppStyleUrl(config, devServer.browserUrl);
+            env.__STENCIL_APP_STYLE_URL__ = styleUrl;
             config.logger.debug(`e2e app style url: ${env.__STENCIL_APP_STYLE_URL__}`);
           }
         }
