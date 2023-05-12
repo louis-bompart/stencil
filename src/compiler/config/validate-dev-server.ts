@@ -164,7 +164,7 @@ export const validateDevServer = (
   }
 
   if (!isAbsolute(devServer.root)) {
-    devServer.root = join(config.rootDir as string, devServer.root);
+    devServer.root = join(config.rootDir, devServer.root);
   }
   devServer.root = normalizePath(devServer.root);
 

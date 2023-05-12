@@ -67,7 +67,7 @@ describe('globals', () => {
 
     it('allows access to the Node prototype', async () => {
       expect(page.rootInstance.protoNode).toEqual(Node.prototype);
-      expect(page.rootInstance.protoNode).toEqual((page.win as any).Node.prototype);
+      expect(page.rootInstance.protoNode).toEqual(page.win.Node.prototype);
       expect(page.rootInstance.protoNode).toEqual((window as any).Node.prototype);
       expect(page.rootInstance.protoNode).toEqual((global as any).Node.prototype);
       expect(page.rootInstance.protoNode).toBeTruthy();
@@ -75,7 +75,7 @@ describe('globals', () => {
 
     it('allows access to the NodeList prototype', async () => {
       expect(page.rootInstance.protoNodeList).toEqual(NodeList.prototype);
-      expect(page.rootInstance.protoNodeList).toEqual((page.win as any).NodeList.prototype);
+      expect(page.rootInstance.protoNodeList).toEqual(page.win.NodeList.prototype);
       expect(page.rootInstance.protoNodeList).toEqual((window as any).NodeList.prototype);
       expect(page.rootInstance.protoNodeList).toEqual((global as any).NodeList.prototype);
       expect(page.rootInstance.protoNodeList).toBeTruthy();
@@ -83,7 +83,7 @@ describe('globals', () => {
 
     it('allows access to the Element prototype', async () => {
       expect(page.rootInstance.protoEl).toEqual(Element.prototype);
-      expect(page.rootInstance.protoEl).toEqual((page.win as any).Element.prototype);
+      expect(page.rootInstance.protoEl).toEqual(page.win.Element.prototype);
       expect(page.rootInstance.protoEl).toEqual((window as any).Element.prototype);
       expect(page.rootInstance.protoEl).toEqual((global as any).Element.prototype);
       expect(page.rootInstance.protoEl).toBeTruthy();
@@ -92,7 +92,7 @@ describe('globals', () => {
     it('allows access to the KeyboardEvent', async () => {
       expect(window.KeyboardEvent).toEqual(KeyboardEvent);
       expect(global.KeyboardEvent).toEqual(KeyboardEvent);
-      expect(page.rootInstance.protoEl).toEqual((page.win as any).Element.prototype);
+      expect(page.rootInstance.protoEl).toEqual(page.win.Element.prototype);
       expect(page.rootInstance.protoEl).toEqual((window as any).Element.prototype);
       expect(page.rootInstance.protoEl).toEqual((global as any).Element.prototype);
       expect(page.rootInstance.protoEl).toBeTruthy();

@@ -10,7 +10,7 @@ export const optimizeCriticalPath = (doc: Document, criticalBundlers: string[], 
 };
 
 export const injectModulePreloads = (doc: Document, paths: string[]) => {
-  const existingLinks = (Array.from(doc.querySelectorAll('link[rel=modulepreload]')) as HTMLLinkElement[]).map((link) =>
+  const existingLinks = Array.from(doc.querySelectorAll('link[rel=modulepreload]')).map((link) =>
     link.getAttribute('href')
   );
 

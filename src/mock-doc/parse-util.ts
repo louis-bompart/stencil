@@ -47,7 +47,7 @@ function getParser(ownerDocument: MockDocument) {
   const treeAdapter: TreeAdapter = {
     createDocument() {
       const doc = ownerDocument.createElement(NODE_NAMES.DOCUMENT_NODE);
-      (doc as any)['x-mode'] = 'no-quirks';
+      doc['x-mode'] = 'no-quirks';
       return doc;
     },
 

@@ -407,7 +407,7 @@ export class MockWindow {
   requestAnimationFrame(callback: (timestamp: number) => void) {
     return this.setTimeout(() => {
       callback(Date.now());
-    }, 0) as number;
+    }, 0);
   }
 
   requestIdleCallback(callback: (deadline: { didTimeout: boolean; timeRemaining: () => number }) => void) {

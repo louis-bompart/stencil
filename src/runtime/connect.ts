@@ -4,7 +4,7 @@ import type * as d from '../declarations';
 
 export const getConnect = (_ref: d.HostRef, tagName: string) => {
   const componentOnReady = (): Promise<any> => {
-    let elm = doc.querySelector(tagName) as any;
+    let elm = doc.querySelector(tagName);
     if (!elm) {
       elm = doc.createElement(tagName) as any;
       doc.body.appendChild(elm);

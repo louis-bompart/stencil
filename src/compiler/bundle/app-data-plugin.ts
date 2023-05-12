@@ -126,7 +126,7 @@ export const appDataPlugin = (
               // so that their `sourcesContent` is of type `(string | null)[]`. But, it will only return `[null]` if
               // `includeContent` is set to `false`. Since we explicitly set `includeContent: true`, we can override
               // the type to satisfy Rollup's type expectation
-              sourcesContent: codeMap.sourcesContent as string[],
+              sourcesContent: codeMap.sourcesContent,
             },
           };
         }

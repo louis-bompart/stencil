@@ -404,7 +404,7 @@ export const parseCss = (css: string, filePath?: string): ParseCssResults => {
       const node: any = {
         type: nodeType,
       };
-      (node as any)[nodeName] = m[1].trim();
+      node[nodeName] = m[1].trim();
       return pos(node);
     };
   };

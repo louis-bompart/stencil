@@ -65,7 +65,7 @@ export const proxyCustomElement = (Cstr: any, compactMeta: d.ComponentRuntimeMet
           this.attachShadow({ mode: 'open' });
         }
       } else {
-        (this as any).shadowRoot = this;
+        this.shadowRoot = this;
       }
     },
   });

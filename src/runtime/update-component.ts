@@ -391,7 +391,7 @@ const serverSideConnected = (elm: any) => {
   const children = elm.children;
   if (children != null) {
     for (let i = 0, ii = children.length; i < ii; i++) {
-      const childElm = children[i] as any;
+      const childElm = children[i];
       if (typeof childElm.connectedCallback === 'function') {
         childElm.connectedCallback();
       }

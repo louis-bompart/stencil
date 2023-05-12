@@ -217,8 +217,8 @@ const addVnodes = (
 ) => {
   let containerElm = ((BUILD.slotRelocation && parentElm['s-cr'] && parentElm['s-cr'].parentNode) || parentElm) as any;
   let childNode: Node;
-  if (BUILD.shadowDom && (containerElm as any).shadowRoot && containerElm.tagName === hostTagName) {
-    containerElm = (containerElm as any).shadowRoot;
+  if (BUILD.shadowDom && containerElm.shadowRoot && containerElm.tagName === hostTagName) {
+    containerElm = containerElm.shadowRoot;
   }
 
   for (; startIdx <= endIdx; ++startIdx) {
@@ -416,7 +416,7 @@ const updateChildren = (parentElm: d.RenderNode, oldCh: d.VNode[], newVNode: d.V
       // `parentElm`. Luckily, `Node.nextSibling` will return `null` if there
       // aren't any siblings, and passing `null` to `Node.insertBefore` will
       // append it to the children of the parent element.
-      parentElm.insertBefore(oldStartVnode.$elm$, oldEndVnode.$elm$.nextSibling as any);
+      parentElm.insertBefore(oldStartVnode.$elm$, oldEndVnode.$elm$.nextSibling);
       oldStartVnode = oldCh[++oldStartIdx];
       newEndVnode = newCh[--newEndIdx];
     } else if (isSameVnode(oldEndVnode, newStartVnode)) {
@@ -619,7 +619,7 @@ export const patch = (oldVNode: d.VNode, newVNode: d.VNode) => {
     if (BUILD.svg && isSvgMode && tag === 'svg') {
       isSvgMode = false;
     }
-  } else if (BUILD.vdomText && BUILD.slotRelocation && (defaultHolder = elm['s-cr'] as any)) {
+  } else if (BUILD.vdomText && BUILD.slotRelocation && (defaultHolder = elm['s-cr'])) {
     // this element has slotted content
     defaultHolder.parentNode.textContent = text;
   } else if (BUILD.vdomText && oldVNode.$text$ !== text) {

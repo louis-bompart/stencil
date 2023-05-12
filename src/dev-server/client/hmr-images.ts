@@ -26,7 +26,7 @@ const hmrStyleSheetsImages = (doc: Document, versionId: string, imageFileNames: 
   });
 
   for (let i = 0; i < doc.styleSheets.length; i++) {
-    hmrStyleSheetImages(cssImageProps, doc.styleSheets[i] as CSSStyleSheet, versionId, imageFileNames);
+    hmrStyleSheetImages(cssImageProps, doc.styleSheets[i], versionId, imageFileNames);
   }
 };
 

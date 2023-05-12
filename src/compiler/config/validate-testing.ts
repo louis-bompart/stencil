@@ -11,7 +11,7 @@ export const validateTesting = (config: d.ValidatedConfig, diagnostics: d.Diagno
     return;
   }
 
-  let configPathDir = config.configPath!;
+  let configPathDir = config.configPath;
   if (isString(configPathDir)) {
     if (basename(configPathDir).includes('.')) {
       configPathDir = dirname(configPathDir);
@@ -43,7 +43,7 @@ export const validateTesting = (config: d.ValidatedConfig, diagnostics: d.Diagno
 
   if (typeof testing.rootDir === 'string') {
     if (!isAbsolute(testing.rootDir)) {
-      testing.rootDir = join(config.rootDir!, testing.rootDir);
+      testing.rootDir = join(config.rootDir, testing.rootDir);
     }
   } else {
     testing.rootDir = config.rootDir;
@@ -55,11 +55,11 @@ export const validateTesting = (config: d.ValidatedConfig, diagnostics: d.Diagno
 
   if (typeof testing.screenshotConnector === 'string') {
     if (!isAbsolute(testing.screenshotConnector)) {
-      testing.screenshotConnector = join(config.rootDir!, testing.screenshotConnector);
+      testing.screenshotConnector = join(config.rootDir, testing.screenshotConnector);
     }
   } else {
     testing.screenshotConnector = join(
-      config.sys!.getCompilerExecutingPath(),
+      config.sys.getCompilerExecutingPath(),
       '..',
       '..',
       'screenshot',
@@ -69,7 +69,7 @@ export const validateTesting = (config: d.ValidatedConfig, diagnostics: d.Diagno
 
   if (!Array.isArray(testing.testPathIgnorePatterns)) {
     testing.testPathIgnorePatterns = DEFAULT_IGNORE_PATTERNS.map((ignorePattern) => {
-      return join(testing.rootDir!, ignorePattern);
+      return join(testing.rootDir, ignorePattern);
     });
 
     (config.outputTargets ?? [])
@@ -77,12 +77,12 @@ export const validateTesting = (config: d.ValidatedConfig, diagnostics: d.Diagno
         (o): o is d.OutputTargetWww | d.OutputTargetDist => (isOutputTargetDist(o) || isOutputTargetWww(o)) && !!o.dir
       )
       .forEach((outputTarget) => {
-        testing.testPathIgnorePatterns?.push(outputTarget.dir!);
+        testing.testPathIgnorePatterns?.push(outputTarget.dir);
       });
   }
 
   if (typeof testing.preset !== 'string') {
-    testing.preset = join(config.sys!.getCompilerExecutingPath(), '..', '..', 'testing');
+    testing.preset = join(config.sys.getCompilerExecutingPath(), '..', '..', 'testing');
   } else if (!isAbsolute(testing.preset)) {
     testing.preset = join(configPathDir, testing.preset);
   }
@@ -92,7 +92,7 @@ export const validateTesting = (config: d.ValidatedConfig, diagnostics: d.Diagno
   }
 
   testing.setupFilesAfterEnv.unshift(
-    join(config.sys!.getCompilerExecutingPath(), '..', '..', 'testing', 'jest-setuptestframework.js')
+    join(config.sys.getCompilerExecutingPath(), '..', '..', 'testing', 'jest-setuptestframework.js')
   );
 
   if (isString(testing.testEnvironment)) {
@@ -148,7 +148,7 @@ export const validateTesting = (config: d.ValidatedConfig, diagnostics: d.Diagno
   }
 
   if (typeof testing.runner !== 'string') {
-    testing.runner = join(config.sys!.getCompilerExecutingPath(), '..', '..', 'testing', 'jest-runner.js');
+    testing.runner = join(config.sys.getCompilerExecutingPath(), '..', '..', 'testing', 'jest-runner.js');
   }
 
   if (typeof testing.waitBeforeScreenshot === 'number') {

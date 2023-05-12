@@ -293,7 +293,7 @@ async function setPageEmulate(page: Page) {
     userAgent: screenshotEmulate.userAgent,
   };
 
-  await (page as Page).emulate(emulateOptions);
+  await page.emulate(emulateOptions);
 }
 
 async function waitForChanges(page: E2EPageInternal) {

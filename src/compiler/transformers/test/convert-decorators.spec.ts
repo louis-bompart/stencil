@@ -360,7 +360,7 @@ describe('convert-decorators', () => {
       const filteredDecorators = filterDecorators([decorator], []);
 
       expect(filteredDecorators).toHaveLength(1);
-      expect(filteredDecorators![0]).toBe(decorator);
+      expect(filteredDecorators[0]).toBe(decorator);
     });
 
     it("doesn't return any decorators when all decorators in the exclude list", () => {
@@ -391,7 +391,7 @@ describe('convert-decorators', () => {
       const filteredDecorators = filterDecorators([customDecorator, decorator], ['Prop']);
 
       expect(filteredDecorators).toHaveLength(1);
-      expect(filteredDecorators![0]).toBe(customDecorator);
+      expect(filteredDecorators[0]).toBe(customDecorator);
     });
   });
 });

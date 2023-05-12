@@ -8,7 +8,7 @@ export const inlineStyleSheets = (
   maxSize: number,
   outputTarget: d.OutputTargetWww
 ) => {
-  const globalLinks = Array.from(doc.querySelectorAll('link[rel=stylesheet]')) as HTMLLinkElement[];
+  const globalLinks = Array.from(doc.querySelectorAll('link[rel=stylesheet]'));
   return Promise.all(
     globalLinks.map(async (link) => {
       const href = link.getAttribute('href');

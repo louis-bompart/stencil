@@ -127,7 +127,7 @@ export const bundleCustomElements = async (
 
       // the output target should have been validated at this point - as a result, we expect this field
       // to have been backfilled if it wasn't provided
-      const outputTargetDir: string = outputTarget.dir!;
+      const outputTargetDir: string = outputTarget.dir;
 
       // besides, if it isn't here we do a diagnostic and an early return
       if (!isString(outputTargetDir)) {
@@ -228,11 +228,11 @@ export const addCustomElementInputs = (
     exportNames.push(exportName);
 
     bundleOpts.inputs[cmp.tagName] = coreKey;
-    bundleOpts.loader![coreKey] = exp.join('\n');
+    bundleOpts.loader[coreKey] = exp.join('\n');
   });
 
   // Generate the contents of the entry file to be created by the bundler
-  bundleOpts.loader!['\0core'] = generateEntryPoint(outputTarget, indexImports, indexExports, exportNames);
+  bundleOpts.loader['\0core'] = generateEntryPoint(outputTarget, indexImports, indexExports, exportNames);
 };
 
 /**

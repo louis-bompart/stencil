@@ -476,7 +476,7 @@ export class E2EElement extends MockHTMLElement implements pd.E2EElementInternal
     }, this._elmHandle);
 
     if (typeof shadowRootHTML === 'string') {
-      (this as any).shadowRoot = parseHtmlToFragment(shadowRootHTML) as any;
+      (this as any).shadowRoot = parseHtmlToFragment(shadowRootHTML);
       (this as any).shadowRoot.host = this;
     } else {
       (this as any).shadowRoot = null;

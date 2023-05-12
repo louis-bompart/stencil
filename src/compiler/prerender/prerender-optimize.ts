@@ -10,7 +10,7 @@ import { getScopeId } from '../style/scope-css';
 import { PrerenderContext } from './prerender-worker-ctx';
 
 export const inlineExternalStyleSheets = async (sys: d.CompilerSystem, appDir: string, doc: Document) => {
-  const documentLinks = Array.from(doc.querySelectorAll('link[rel=stylesheet]')) as HTMLLinkElement[];
+  const documentLinks = Array.from(doc.querySelectorAll('link[rel=stylesheet]'));
   if (documentLinks.length === 0) {
     return;
   }
@@ -227,7 +227,7 @@ export const hashAssets = async (
   // hash id is cached in each worker, so shouldn't have to do this for every page
 
   // update the stylesheet content first so the hash url()s are apart of the file's hash too
-  const links = Array.from(doc.querySelectorAll('link[rel=stylesheet][href]')) as HTMLLinkElement[];
+  const links = Array.from(doc.querySelectorAll('link[rel=stylesheet][href]'));
 
   for (const link of links) {
     const href = link.getAttribute('href');
@@ -274,7 +274,7 @@ export const hashAssets = async (
 
   const pageStates = Array.from(
     doc.querySelectorAll('script[data-stencil-static="page.state"][type="application/json"]')
-  ) as HTMLScriptElement[];
+  );
   if (pageStates.length > 0) {
     await Promise.all(
       pageStates.map(async (pageStateScript) => {

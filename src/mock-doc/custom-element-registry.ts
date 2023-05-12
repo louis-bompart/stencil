@@ -186,7 +186,7 @@ export function connectNode(ownerDocument: any, node: MockNode) {
 }
 
 function fireConnectedCallback(node: any) {
-  if (typeof (node as any).connectedCallback === 'function') {
+  if (typeof node.connectedCallback === 'function') {
     if (tempDisableCallbacks.has(node.ownerDocument) === false) {
       try {
         node.connectedCallback();

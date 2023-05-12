@@ -57,7 +57,7 @@ export function patchDomImplementation(doc: any, opts: d.HydrateFactoryOptions) 
 function getRootNode(opts?: { composed?: boolean; [key: string]: any }) {
   const isComposed = opts != null && opts.composed === true;
 
-  let node: Node = this as any;
+  let node: Node = this;
 
   while (node.parentNode != null) {
     node = node.parentNode;

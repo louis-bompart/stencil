@@ -430,10 +430,10 @@ describe('renderer', () => {
           patch(vnode0, vnode1);
           expect(hostElm.children.length).toEqual(4);
 
-          (<any>hostElm.children[0]).instance = 1;
-          (<any>hostElm.children[1]).instance = 2;
-          (<any>hostElm.children[2]).instance = 3;
-          (<any>hostElm.children[3]).instance = 4;
+          hostElm.children[0].instance = 1;
+          hostElm.children[1].instance = 2;
+          hostElm.children[2].instance = 3;
+          hostElm.children[3].instance = 4;
 
           patch(vnode1, vnode2);
           expect(hostElm.children.length).toEqual(4);

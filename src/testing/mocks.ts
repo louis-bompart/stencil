@@ -230,7 +230,7 @@ export function mockCompilerSystem(): TestingSystem {
 
 export function mockDocument(html: string = null) {
   const win = new MockWindow(html);
-  return win.document as Document;
+  return win.document;
 }
 
 export function mockWindow(html: string = null) {

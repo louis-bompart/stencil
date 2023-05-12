@@ -349,14 +349,14 @@ const getIdentifierValue = (escapedText: any) => {
 const getTextOfPropertyName = (propName: ts.PropertyName) => {
   switch (propName.kind) {
     case ts.SyntaxKind.Identifier:
-      return (<ts.Identifier>propName).text;
+      return propName.text;
     case ts.SyntaxKind.StringLiteral:
     case ts.SyntaxKind.NumericLiteral:
       return (<ts.LiteralExpression>propName).text;
     case ts.SyntaxKind.ComputedPropertyName:
-      const expression = (<ts.ComputedPropertyName>propName).expression;
+      const expression = propName.expression;
       if (ts.isStringLiteral(expression) || ts.isNumericLiteral(expression)) {
-        return (<ts.LiteralExpression>(<ts.ComputedPropertyName>propName).expression).text;
+        return (<ts.LiteralExpression>propName.expression).text;
       }
   }
   return undefined;
@@ -498,13 +498,13 @@ const getTypeReferenceLocation = (typeName: string, tsNode: ts.Node): d.Componen
     // Is the interface defined in the file and exported
     const isInterfaceDeclarationExported =
       ts.isInterfaceDeclaration(st) &&
-      (<ts.Identifier>st.name).getText() === typeName &&
+      st.name.getText() === typeName &&
       Array.isArray(statementModifiers) &&
       statementModifiers.some((mod) => mod.kind === ts.SyntaxKind.ExportKeyword);
 
     const isTypeAliasDeclarationExported =
       ts.isTypeAliasDeclaration(st) &&
-      (<ts.Identifier>st.name).getText() === typeName &&
+      st.name.getText() === typeName &&
       Array.isArray(statementModifiers) &&
       statementModifiers.some((mod) => mod.kind === ts.SyntaxKind.ExportKeyword);
 
@@ -623,7 +623,7 @@ export const typeToString = (checker: ts.TypeChecker, type: ts.Type): string => 
  */
 export const parseDocsType = (checker: ts.TypeChecker, type: ts.Type, parts: Set<string>): void => {
   if (type.isUnion()) {
-    (type as ts.UnionType).types.forEach((t) => {
+    type.types.forEach((t) => {
       parseDocsType(checker, t, parts);
     });
   } else {

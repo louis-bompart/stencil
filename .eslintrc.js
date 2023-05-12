@@ -1,6 +1,10 @@
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
+  parserOptions: {
+    project: true,
+    tsconfigRootDir: __dirname,
+  },
   plugins: ['@typescript-eslint', 'jsdoc', 'jest', 'simple-import-sort'],
   extends: [
     'plugin:jest/recommended',
@@ -10,6 +14,7 @@ module.exports = {
     'prettier',
   ],
   rules: {
+    '@typescript-eslint/no-unnecessary-type-assertion': 'error',
     '@typescript-eslint/no-unused-vars': [
       'error',
       {

@@ -157,7 +157,7 @@ describe('transform-utils', () => {
       const decorators = retrieveTsDecorators(node);
 
       expect(decorators).toHaveLength(1);
-      expect(decorators![0]).toEqual(initialDecorators[0]);
+      expect(decorators[0]).toEqual(initialDecorators[0]);
     });
   });
 
@@ -197,7 +197,7 @@ describe('transform-utils', () => {
       const modifiers = retrieveTsModifiers(node);
 
       expect(modifiers).toHaveLength(1);
-      expect(modifiers![0]).toEqual(initialModifiers[0]);
+      expect(modifiers[0]).toEqual(initialModifiers[0]);
     });
   });
 });

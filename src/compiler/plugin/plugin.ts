@@ -12,7 +12,7 @@ export const runPluginResolveId = async (pluginCtx: PluginCtx, importee: string)
         const results = plugin.resolveId(importee, null, pluginCtx);
 
         if (results != null) {
-          if (isFunction((results as any).then)) {
+          if (isFunction(results.then)) {
             const promiseResults = await results;
             if (promiseResults != null) {
               return promiseResults as string;
@@ -38,7 +38,7 @@ export const runPluginLoad = async (pluginCtx: PluginCtx, id: string) => {
         const results = plugin.load(id, pluginCtx);
 
         if (results != null) {
-          if (isFunction((results as any).then)) {
+          if (isFunction(results.then)) {
             const promiseResults = await results;
             if (promiseResults != null) {
               return promiseResults as string;
@@ -120,7 +120,7 @@ export const runPluginTransforms = async (
         const results = plugin.transform(transformResults.code, transformResults.id, pluginCtx);
 
         if (results != null) {
-          if (isFunction((results as any).then)) {
+          if (isFunction(results.then)) {
             pluginTransformResults = await results;
           } else {
             pluginTransformResults = results as PluginTransformResults;
@@ -224,7 +224,7 @@ export const runPluginTransformsEsmImports = async (
         let pluginTransformResults: PluginTransformResults | string;
         const results = plugin.transform(transformResults.code, transformResults.id, pluginCtx);
         if (results != null) {
-          if (isFunction((results as any).then)) {
+          if (isFunction(results.then)) {
             pluginTransformResults = await results;
           } else {
             pluginTransformResults = results as PluginTransformResults;
@@ -232,7 +232,7 @@ export const runPluginTransformsEsmImports = async (
 
           if (pluginTransformResults != null) {
             if (isString(pluginTransformResults)) {
-              transformResults.code = pluginTransformResults as string;
+              transformResults.code = pluginTransformResults;
             } else {
               if (isString(pluginTransformResults.code)) {
                 transformResults.code = pluginTransformResults.code;

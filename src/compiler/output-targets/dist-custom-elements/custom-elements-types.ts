@@ -46,9 +46,9 @@ const generateCustomElementsTypesOutput = async (
   const isBundleExport = outputTarget.customElementsExportBehavior === 'bundle';
 
   // the path where we're going to write the typedef for the whole dist-custom-elements output
-  const customElementsDtsPath = join(outputTarget.dir!, 'index.d.ts');
+  const customElementsDtsPath = join(outputTarget.dir, 'index.d.ts');
   // the directory where types for the individual components are written
-  const componentsTypeDirectoryRelPath = relative(outputTarget.dir!, typesDir);
+  const componentsTypeDirectoryRelPath = relative(outputTarget.dir, typesDir);
 
   const components = buildCtx.components.filter((m) => !m.isCollectionDependency);
 
@@ -136,7 +136,7 @@ const generateCustomElementsTypesOutput = async (
       : []),
   ];
 
-  const componentsDtsRelPath = relDts(outputTarget.dir!, join(typesDir, 'components.d.ts'));
+  const componentsDtsRelPath = relDts(outputTarget.dir, join(typesDir, 'components.d.ts'));
 
   // To mirror the index.js file and only export the typedefs for the
   // entities exported there, we will re-export the typedefs iff
@@ -164,7 +164,7 @@ const generateCustomElementsTypesOutput = async (
     components.map(async (cmp) => {
       const dtsCode = generateCustomElementType(componentsDtsRelPath, cmp);
       const fileName = `${cmp.tagName}.d.ts`;
-      const filePath = join(outputTarget.dir!, fileName);
+      const filePath = join(outputTarget.dir, fileName);
       await compilerCtx.fs.writeFile(filePath, dtsCode, { outputTargetType: outputTarget.type });
     })
   );

@@ -76,8 +76,8 @@ function updateStyleUrls(url: URL, oldCss: string) {
   const hmrUrls = url.searchParams.get('s-hmr-urls');
 
   if (versionId && hmrUrls) {
-    (hmrUrls as string).split(',').forEach((hmrUrl) => {
-      urlVersionIds.set(hmrUrl, versionId as string);
+    hmrUrls.split(',').forEach((hmrUrl) => {
+      urlVersionIds.set(hmrUrl, versionId);
     });
   }
 

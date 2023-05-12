@@ -4,7 +4,7 @@ import { connectBrowser, disconnectBrowser, newBrowserPage } from '../puppeteer/
 
 export function createJestPuppeteerEnvironment() {
   const NodeEnvironment = require('jest-environment-node');
-  const JestEnvironment = class extends (NodeEnvironment as any) {
+  const JestEnvironment = class extends NodeEnvironment {
     global: JestEnvironmentGlobal;
     browser: any = null;
     pages: any[] = [];

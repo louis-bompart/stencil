@@ -33,8 +33,8 @@ export const patchCloneNode = (HostElementPrototype: any) => {
       ];
 
       for (; i < srcNode.childNodes.length; i++) {
-        slotted = (srcNode.childNodes[i] as any)['s-nr'];
-        nonStencilNode = stencilPrivates.every((privateField) => !(srcNode.childNodes[i] as any)[privateField]);
+        slotted = srcNode.childNodes[i]['s-nr'];
+        nonStencilNode = stencilPrivates.every((privateField) => !srcNode.childNodes[i][privateField]);
         if (slotted) {
           if (BUILD.appendChildSlotFix && (clonedNode as any).__appendChild) {
             (clonedNode as any).__appendChild(slotted.cloneNode(true));
@@ -43,7 +43,7 @@ export const patchCloneNode = (HostElementPrototype: any) => {
           }
         }
         if (nonStencilNode) {
-          clonedNode.appendChild((srcNode.childNodes[i] as any).cloneNode(true));
+          clonedNode.appendChild(srcNode.childNodes[i].cloneNode(true));
         }
       }
     }
@@ -191,7 +191,7 @@ const getHostSlotNode = (childNodes: NodeListOf<ChildNode>, slotName: string) =>
 
 const getHostSlotChildNodes = (n: d.RenderNode, slotName: string) => {
   const childNodes: d.RenderNode[] = [n];
-  while ((n = n.nextSibling as any) && (n as d.RenderNode)['s-sn'] === slotName) {
+  while ((n = n.nextSibling as any) && n['s-sn'] === slotName) {
     childNodes.push(n as any);
   }
   return childNodes;
