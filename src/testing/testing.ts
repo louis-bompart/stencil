@@ -27,13 +27,20 @@ export const createTesting = async (config: ValidatedConfig): Promise<Testing> =
   let devServer: DevServer | null;
   let puppeteerBrowser: puppeteer.Browser | null;
 
-  const run = async (opts: TestingRunOptions = {}) => {
+  /**
+   * Initiate running spec and/or end-to-end tests with Stencil
+   * @param opts running options to apply when
+   * @returns true if all tests passed. Returns false if any tests failed or an error occurred during the test
+   * setup/running process
+   */
+  const run = async (opts: TestingRunOptions = {}) : Promise<boolean> => {
     let doScreenshots = false;
     let passed = false;
     let env: E2EProcessEnv;
     let compilerWatcher: CompilerWatcher | null = null;
     const msg: string[] = [];
 
+    // TODO(NOW): This is a _huge_ try block
     try {
       if (!opts.spec && !opts.e2e) {
         config.logger.error(
@@ -42,6 +49,7 @@ export const createTesting = async (config: ValidatedConfig): Promise<Testing> =
         return false;
       }
 
+      // TODO(NOW): Split this?
       // during E2E tests, we can safely assume that the current environment is a `E2EProcessEnv`
       env = process.env as E2EProcessEnv;
 
@@ -97,11 +105,9 @@ export const createTesting = async (config: ValidatedConfig): Promise<Testing> =
           }
         }
 
-        if (config.devServer) {
-          config.devServer.openBrowser = false;
-          config.devServer.gzip = false;
-          config.devServer.reloadStrategy = null;
-        }
+        config.devServer.openBrowser = false;
+        config.devServer.gzip = false;
+        config.devServer.reloadStrategy = null;
 
         const startupResults = await Promise.all([
           start(config.devServer, config.logger),
