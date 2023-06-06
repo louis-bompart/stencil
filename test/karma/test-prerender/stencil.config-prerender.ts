@@ -5,6 +5,7 @@ export const config: Config = {
   namespace: 'TestPrerender',
   globalStyle: 'src/global/app.css',
   tsconfig: 'tsconfig-prerender.json',
+  transformAliasedImportPaths: true,
   outputTargets: [
     {
       type: 'www',

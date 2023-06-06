@@ -13,7 +13,17 @@ import { generateTemplateHtml } from './prerender-template-html';
 import { generateRobotsTxt } from './robots-txt';
 import { generateSitemapXml } from './sitemap-xml';
 
-export const createPrerenderer = async (config: d.ValidatedConfig) => {
+/**
+ *
+ * @param config
+ * @returns
+ */
+export const createPrerenderer = async (config: d.ValidatedConfig): Promise<d.PrerenderResults> => {
+  /**
+   *
+   * @param opts
+   * @returns
+   */
   const start = (opts: d.PrerenderStartOptions) => {
     return runPrerender(config, opts.hydrateAppFilePath, opts.componentGraph, opts.srcIndexHtmlPath, opts.buildId);
   };

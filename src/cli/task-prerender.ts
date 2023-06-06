@@ -24,13 +24,22 @@ export const taskPrerender = async (coreCompiler: CoreCompiler, config: Validate
   }
 };
 
+/**
+ * Invokes the prerender task
+ * @param coreCompiler the Stencil core compiler instance to use
+ * @param config the project's validated configuration
+ * @param hydrateAppFilePath the output destination of running this task
+ * @param componentGraph a component dependency graph
+ * @param srcIndexHtmlPath the path to the `index.html` file
+ * @returns a collection of diagnostics, empty if prerender completes successfully
+ */
 export const runPrerenderTask = async (
   coreCompiler: CoreCompiler,
   config: ValidatedConfig,
   hydrateAppFilePath: string,
-  componentGraph: BuildResultsComponentGraph,
+  componentGraph: BuildResultsComponentGraph | null,
   srcIndexHtmlPath: string
-) => {
+): Promise<Diagnostic[]> => {
   const diagnostics: Diagnostic[] = [];
 
   try {
