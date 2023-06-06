@@ -101,15 +101,20 @@ export function generateHydrateResults(opts: d.HydrateDocumentOptions) {
   return results;
 }
 
-export const createHydrateBuildId = () => {
-  // should be case insensitive because it could be in a URL
-  // and shouldn't start with a number cuz we might use it as a js prop
+/**
+ * Generates an eight character build identifier (ID) of the format: `[a-z][a-z0-9]{7}`
+ * @returns a randomly generated, eight character build ID
+ */
+export const createHydrateBuildId = (): string => {
+  // the return value of this function should be case-insensitive because it could be used in a URL
   let chars = 'abcdefghijklmnopqrstuvwxyz';
   let buildId = '';
   while (buildId.length < 8) {
     const char = chars[Math.floor(Math.random() * chars.length)];
     buildId += char;
     if (buildId.length === 1) {
+      // force the first character to be alphabetic. after that, the remaining characters can be alphanumeric.
+      // the return value shouldn't start with a number, as we might use it as a js prop
       chars += '0123456789';
     }
   }

@@ -12,17 +12,20 @@ import { drainPrerenderQueue, initializePrerenderEntryUrls } from './prerender-q
 import { generateTemplateHtml } from './prerender-template-html';
 import { generateRobotsTxt } from './robots-txt';
 import { generateSitemapXml } from './sitemap-xml';
+import { PrerenderResults } from '../../declarations';
 
 /**
- *
- * @param config
- * @returns
+ * Helper function to generate an object for handling the prerender process
+ * @param config a project's validated configuration
+ * @returns an object capable of starting the prerender process
  */
-export const createPrerenderer = async (config: d.ValidatedConfig): Promise<d.PrerenderResults> => {
+export const createPrerenderer = async (
+  config: d.ValidatedConfig
+): Promise<{ start: (opts: d.PrerenderStartOptions) => ReturnType<typeof runPrerender> }> => {
   /**
-   *
-   * @param opts
-   * @returns
+   * A helper function to start the pre-render process
+   * @param opts options for the pre-renderer
+   * @returns the results of the prerender
    */
   const start = (opts: d.PrerenderStartOptions) => {
     return runPrerender(config, opts.hydrateAppFilePath, opts.componentGraph, opts.srcIndexHtmlPath, opts.buildId);
@@ -32,13 +35,22 @@ export const createPrerenderer = async (config: d.ValidatedConfig): Promise<d.Pr
   };
 };
 
+/**
+ *
+ * @param config
+ * @param hydrateAppFilePath
+ * @param componentGraph
+ * @param srcIndexHtmlPath
+ * @param buildId
+ * @returns
+ */
 const runPrerender = async (
   config: d.ValidatedConfig,
   hydrateAppFilePath: string,
   componentGraph: d.BuildResultsComponentGraph,
   srcIndexHtmlPath: string,
   buildId: string
-) => {
+): Promise<PrerenderResults> => {
   const startTime = Date.now();
   const diagnostics: d.Diagnostic[] = [];
   const results: d.PrerenderResults = {
@@ -132,6 +144,18 @@ const runPrerender = async (
   return results;
 };
 
+/**
+ *
+ * @param workerCtx
+ * @param results
+ * @param diagnostics
+ * @param config
+ * @param devServer
+ * @param hydrateAppFilePath
+ * @param componentGraph
+ * @param srcIndexHtmlPath
+ * @param outputTarget
+ */
 const runPrerenderOutputTarget = async (
   workerCtx: d.CompilerWorkerContext,
   results: d.PrerenderResults,
@@ -142,7 +166,7 @@ const runPrerenderOutputTarget = async (
   componentGraph: d.BuildResultsComponentGraph,
   srcIndexHtmlPath: string,
   outputTarget: d.OutputTargetWww
-) => {
+): Promise<void> => {
   try {
     const timeSpan = config.logger.createTimeSpan(`prerendering started`);
 
