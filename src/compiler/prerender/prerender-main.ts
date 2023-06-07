@@ -144,7 +144,6 @@ const runPrerender = async (
   return results;
 };
 
-
 /**
  * Runs the prerender build
  * @param workerCtx the compiler worker context to us to run the prerender
