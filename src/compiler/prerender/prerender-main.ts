@@ -2,6 +2,7 @@ import { buildError, catchError, hasError, isOutputTargetWww, isString } from '@
 import { isAbsolute, join } from 'path';
 
 import type * as d from '../../declarations';
+import { PrerenderResults } from '../../declarations';
 import { createHydrateBuildId } from '../../hydrate/runner/render-utils';
 import { getAbsoluteBuildDir } from '../html/html-utils';
 import { createWorkerMainContext } from '../worker/main-thread';
@@ -12,7 +13,6 @@ import { drainPrerenderQueue, initializePrerenderEntryUrls } from './prerender-q
 import { generateTemplateHtml } from './prerender-template-html';
 import { generateRobotsTxt } from './robots-txt';
 import { generateSitemapXml } from './sitemap-xml';
-import { PrerenderResults } from '../../declarations';
 
 /**
  * Helper function to generate an object for handling the prerender process
@@ -36,13 +36,13 @@ export const createPrerenderer = async (
 };
 
 /**
- *
- * @param config
- * @param hydrateAppFilePath
- * @param componentGraph
- * @param srcIndexHtmlPath
- * @param buildId
- * @returns
+ * Runs the prerender build
+ * @param config the project's validated configuration
+ * @param hydrateAppFilePath the output destination of running this task
+ * @param componentGraph a component dependency graph
+ * @param srcIndexHtmlPath the path to the `index.html` file
+ * @param buildId a unique identifier string for the current prerender build
+ * @returns the results of the prerender
  */
 const runPrerender = async (
   config: d.ValidatedConfig,
@@ -144,17 +144,18 @@ const runPrerender = async (
   return results;
 };
 
+
 /**
- *
- * @param workerCtx
- * @param results
- * @param diagnostics
- * @param config
- * @param devServer
- * @param hydrateAppFilePath
- * @param componentGraph
- * @param srcIndexHtmlPath
- * @param outputTarget
+ * Runs the prerender build
+ * @param workerCtx the compiler worker context to us to run the prerender
+ * @param results a return parameter containing the results of the render
+ * @param diagnostics a collection of diagnostics to append to in the event an error is detected
+ * @param config the project's validated configuration
+ * @param devServer a Stencil dev server instance to use to generate the build
+ * @param hydrateAppFilePath the output destination of running this task
+ * @param componentGraph a component dependency graph
+ * @param srcIndexHtmlPath the path to the `index.html` file
+ * @param outputTarget the unique output target to run the prerender build against
  */
 const runPrerenderOutputTarget = async (
   workerCtx: d.CompilerWorkerContext,

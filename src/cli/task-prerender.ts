@@ -4,7 +4,24 @@ import type { BuildResultsComponentGraph, Diagnostic, ValidatedConfig } from '..
 import type { CoreCompiler } from './load-compiler';
 import { startupCompilerLog } from './logs';
 
-export const taskPrerender = async (coreCompiler: CoreCompiler, config: ValidatedConfig) => {
+/**
+ * Invokes the prerender task.
+ *
+ * This function is intended to be invoked when as the only task in a Stencil invocation:
+ * ```bash
+ * npx stencil prerender ...
+ * ```
+ *
+ * As opposed to running prerender as a part of the build task:
+ * ```bash
+ * npx stencil build --prerender ...
+ * ```
+ *
+ * @param coreCompiler the Stencil core compiler instance to use
+ * @param config the project's validated configuration
+ * @returns `undefined`. Process is terminated in the event that errors occur during the pre-render.
+ */
+export const taskPrerender = async (coreCompiler: CoreCompiler, config: ValidatedConfig): Promise<void> => {
   startupCompilerLog(coreCompiler, config);
 
   const hydrateAppFilePath = config.flags.unknownArgs[0];
@@ -26,6 +43,18 @@ export const taskPrerender = async (coreCompiler: CoreCompiler, config: Validate
 
 /**
  * Invokes the prerender task
+ *
+ * This function is intended to be invoked either as a part of the 'prerender' task:
+ * ```bash
+ * npx stencil prerender ...
+ * ```
+ * Or as a part of the build task:
+ * ```bash
+ * npx stencil build --prerender ...
+ * ```
+ *
+ * When run as the sole task, consider using {@link taskPrerender}, which wraps this function.
+ *
  * @param coreCompiler the Stencil core compiler instance to use
  * @param config the project's validated configuration
  * @param hydrateAppFilePath the output destination of running this task
