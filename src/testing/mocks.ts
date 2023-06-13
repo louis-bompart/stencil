@@ -200,14 +200,12 @@ export function mockBuildCtx(config?: Config, compilerCtx?: CompilerCtx): BuildC
 }
 
 export function mockCache(config?: Config, compilerCtx?: CompilerCtx) {
-  if (!config) {
-    config = mockConfig();
-  }
+  const validatedConfig = mockValidatedConfig((config as Partial<ValidatedConfig>) ?? {});
   if (!compilerCtx) {
     compilerCtx = mockCompilerCtx(config);
   }
   config.enableCache = true;
-  const cache = new CompilerCache(config, compilerCtx.fs);
+  const cache = new CompilerCache(validatedConfig, compilerCtx.fs);
   cache.initCacheDir();
   return cache as Cache;
 }

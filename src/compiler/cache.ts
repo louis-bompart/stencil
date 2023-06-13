@@ -10,7 +10,7 @@ export class Cache implements d.Cache {
   private logger: d.Logger;
   private buildCacheDir: string;
 
-  constructor(private config: d.Config, private cacheFs: InMemoryFileSystem) {
+  constructor(private config: d.ValidatedConfig, private cacheFs: InMemoryFileSystem) {
     this.sys = config.sys;
     this.logger = config.logger;
   }
@@ -52,7 +52,7 @@ export class Cache implements d.Cache {
       return null;
     }
 
-    let result: string;
+    let result: string | null;
     try {
       result = await this.cacheFs.readFile(this.getCacheFilePath(key));
       this.failed = 0;
@@ -89,9 +89,10 @@ export class Cache implements d.Cache {
   }
 
   async createKey(domain: string, ...args: any[]) {
-    if (!this.config.enableCache) {
+    if (!this.config.enableCache || !this.sys.generateContentHash) {
       return domain + Math.random() * 9999999;
     }
+
     const hash = await this.sys.generateContentHash(JSON.stringify(args), 32);
     return domain + '_' + hash;
   }
@@ -135,8 +136,7 @@ export class Cache implements d.Cache {
         const stat = await fs.stat(filePath);
         const lastModified = stat.mtimeMs;
 
-        const diff = now - lastModified;
-        if (diff > ONE_WEEK) {
+        if (lastModified && now - lastModified > ONE_WEEK) {
           await fs.removeFile(filePath);
           totalCleared++;
         }
@@ -161,15 +161,12 @@ export class Cache implements d.Cache {
     }
   }
 
-  private getCacheFilePath(key: string) {
+  private getCacheFilePath(key: string): string {
     return join(this.buildCacheDir, key) + '.log';
   }
 
-  getMemoryStats() {
-    if (this.cacheFs != null) {
-      return this.cacheFs.getMemoryStats();
-    }
-    return null;
+  getMemoryStats(): string {
+    return this.cacheFs.getMemoryStats();
   }
 }
 
