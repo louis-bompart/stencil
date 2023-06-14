@@ -1,15 +1,16 @@
 import type * as d from '@stencil/core/declarations';
-import { mockBuildCtx, mockCompilerCtx, mockConfig } from '@stencil/core/testing';
+import { mockBuildCtx, mockCompilerCtx, mockValidatedConfig } from '@stencil/core/testing';
 
 import { generateBuildResults } from '../build-results';
 import { generateBuildStats } from '../build-stats';
 
 describe('generateBuildStats', () => {
-  const config = mockConfig();
+  let config: d.ValidatedConfig;
   let compilerCtx: d.CompilerCtx;
   let buildCtx: d.BuildCtx;
 
   beforeEach(() => {
+    config = mockValidatedConfig();
     compilerCtx = mockCompilerCtx(config);
     buildCtx = mockBuildCtx(config, compilerCtx);
   });
