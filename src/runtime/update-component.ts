@@ -46,11 +46,11 @@ const dispatchHooks = (hostRef: d.HostRef, isInitialLoad: boolean): Promise<void
   const elm = hostRef.$hostElement$.deref();
   if (elm === undefined) {
     // the GC's already done its grim work, we should bow out
-    return;
+    return undefined;
   }
 
   const endSchedule = createTime('scheduleUpdate', hostRef.$cmpMeta$.$tagName$);
-  const instance = BUILD.lazyLoad ? hostRef.$lazyInstance$ : elm;
+  const instance = BUILD.lazyLoad ? hostRef.$lazyInstance$.deref() : elm;
 
   // We're going to use this variable together with `enqueue` to implement a
   // little promise-based queue. We start out with it `undefined`. When we add
@@ -139,7 +139,7 @@ const isPromisey = (maybePromise: Promise<void> | unknown): maybePromise is Prom
   maybePromise instanceof Promise ||
   (maybePromise && (maybePromise as any).then && typeof (maybePromise as Promise<void>).then === 'function');
 
-const updateComponent = async (hostRef: d.HostRef, instance: any, isInitialLoad: boolean) => {
+const updateComponent = async (hostRef: d.HostRef, instance: d.HostElement | d.ComponentInterface, isInitialLoad: boolean) => {
   // updateComponent
   const elm = hostRef.$hostElement$.deref() as d.RenderNode;
 
@@ -221,6 +221,7 @@ const updateComponent = async (hostRef: d.HostRef, instance: any, isInitialLoad:
 
 let renderingRef: any = null;
 
+// instance: d.HostElement | d.ComponentInterface
 const callRender = (hostRef: d.HostRef, instance: any, elm: HTMLElement) => {
   // in order for bundlers to correctly treeshake the BUILD object
   // we need to ensure BUILD is not deoptimized within a try/catch
@@ -274,7 +275,7 @@ export const postUpdateComponent = (hostRef: d.HostRef) => {
   }
 
   const endPostUpdate = createTime('postUpdate', tagName);
-  const instance = BUILD.lazyLoad ? hostRef.$lazyInstance$ : (elm as any);
+  const instance = BUILD.lazyLoad ? hostRef.$lazyInstance$.deref() : (elm as any);
   const ancestorComponent = hostRef.$ancestorComponent$;
 
   if (BUILD.cmpDidRender) {

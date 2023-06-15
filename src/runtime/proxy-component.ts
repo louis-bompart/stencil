@@ -76,8 +76,13 @@ export const proxyComponent = (
         Object.defineProperty(prototype, memberName, {
           value(this: d.HostElement, ...args: any[]) {
             const ref = getHostRef(this);
-            return ref.$onInstancePromise$.then(() => ref.$lazyInstance$[memberName](...args));
-          },
+            const lazyInstance = ref.$lazyInstance$.deref();
+            return ref.$onInstancePromise$.then(() => {
+              if (lazyInstance) {
+                lazyInstance[memberName](...args);
+              }
+            });
+          }
         });
       }
     });

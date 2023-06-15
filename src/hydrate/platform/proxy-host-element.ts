@@ -58,7 +58,13 @@ export function proxyHostElement(elm: d.HostElement, cmpMeta: d.ComponentRuntime
         Object.defineProperty(elm, memberName, {
           value(this: d.HostElement, ...args: any[]) {
             const ref = getHostRef(this);
-            return ref.$onInstancePromise$.then(() => ref.$lazyInstance$[memberName](...args)).catch(consoleError);
+            const lazyInstance = ref.$lazyInstance$.deref();
+
+            return ref.$onInstancePromise$.then(() => {
+              if (lazyInstance) {
+                lazyInstance[memberName](...args)
+              }
+            }).catch(consoleError);
           },
         });
       }
