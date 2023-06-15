@@ -120,7 +120,8 @@ export const bootstrapLazy = (lazyBundles: d.LazyBundlesRuntimeData, options: d.
           }
           if (isBootstrapping) {
             // connectedCallback will be processed once all components have been registered
-            deferredConnectedCallbacks.push(this);
+            // @ts-ignore
+            deferredConnectedCallbacks.push(new WeakRef(this));
           } else {
             plt.jmp(() => connectedCallback(this));
           }
@@ -180,7 +181,13 @@ export const bootstrapLazy = (lazyBundles: d.LazyBundlesRuntimeData, options: d.
   // Process deferred connectedCallbacks now all components have been registered
   isBootstrapping = false;
   if (deferredConnectedCallbacks.length) {
-    deferredConnectedCallbacks.map((host) => host.connectedCallback());
+    deferredConnectedCallbacks.map((host) => {
+      // @ts-ignore
+      host = host.deref();
+      if (host) {
+        host.connectedCallback();
+      }
+    });
   } else {
     if (BUILD.profile) {
       plt.jmp(() => (appLoadFallback = setTimeout(appDidLoad, 30, 'timeout')));

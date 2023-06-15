@@ -60,11 +60,13 @@ export function proxyHostElement(elm: d.HostElement, cmpMeta: d.ComponentRuntime
             const ref = getHostRef(this);
             const lazyInstance = ref.$lazyInstance$.deref();
 
-            return ref.$onInstancePromise$.then(() => {
-              if (lazyInstance) {
-                lazyInstance[memberName](...args)
-              }
-            }).catch(consoleError);
+            return ref.$onInstancePromise$
+              .then(() => {
+                if (lazyInstance) {
+                  lazyInstance[memberName](...args);
+                }
+              })
+              .catch(consoleError);
           },
         });
       }

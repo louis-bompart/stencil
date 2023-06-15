@@ -116,7 +116,7 @@ export const initializeComponent = async (
   }
 
   // we've successfully created a lazy instance
-  const ancestorComponent = hostRef.$ancestorComponent$;
+  const ancestorComponent = hostRef.$ancestorComponent$?.deref();
   const schedule = () => scheduleUpdate(hostRef, true);
 
   if (BUILD.asyncLoading && ancestorComponent && ancestorComponent['s-rc']) {

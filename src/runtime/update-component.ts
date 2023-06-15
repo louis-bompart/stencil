@@ -23,7 +23,7 @@ export const scheduleUpdate = (hostRef: d.HostRef, isInitialLoad: boolean) => {
     hostRef.$flags$ |= HOST_FLAGS.needsRerender;
     return;
   }
-  attachToAncestor(hostRef, hostRef.$ancestorComponent$);
+  attachToAncestor(hostRef, hostRef.$ancestorComponent$?.deref());
 
   // there is no ancestor component or the ancestor component
   // has already fired off its lifecycle update then
@@ -139,7 +139,11 @@ const isPromisey = (maybePromise: Promise<void> | unknown): maybePromise is Prom
   maybePromise instanceof Promise ||
   (maybePromise && (maybePromise as any).then && typeof (maybePromise as Promise<void>).then === 'function');
 
-const updateComponent = async (hostRef: d.HostRef, instance: d.HostElement | d.ComponentInterface, isInitialLoad: boolean) => {
+const updateComponent = async (
+  hostRef: d.HostRef,
+  instance: d.HostElement | d.ComponentInterface,
+  isInitialLoad: boolean
+) => {
   // updateComponent
   const elm = hostRef.$hostElement$.deref() as d.RenderNode;
 
@@ -233,7 +237,7 @@ const callRender = (hostRef: d.HostRef, instance: any, elm: HTMLElement) => {
 
   try {
     renderingRef = instance;
-    instance = allRenderFn ? instance.render() : instance.render && instance.render();
+    instance = allRenderFn ? instance?.render() : instance.render && instance.render();
 
     if (updatable && taskQueue) {
       hostRef.$flags$ &= ~HOST_FLAGS.isQueuedForUpdate;
@@ -276,7 +280,7 @@ export const postUpdateComponent = (hostRef: d.HostRef) => {
 
   const endPostUpdate = createTime('postUpdate', tagName);
   const instance = BUILD.lazyLoad ? hostRef.$lazyInstance$.deref() : (elm as any);
-  const ancestorComponent = hostRef.$ancestorComponent$;
+  const ancestorComponent = hostRef.$ancestorComponent$?.deref();
 
   if (BUILD.cmpDidRender) {
     if (BUILD.isDev) {
@@ -311,7 +315,7 @@ export const postUpdateComponent = (hostRef: d.HostRef) => {
     endPostUpdate();
 
     if (BUILD.asyncLoading) {
-      hostRef.$onReadyResolve$(elm);
+      hostRef.$onReadyResolve$(new WeakRef(elm));
       if (!ancestorComponent) {
         appDidLoad(tagName);
       }

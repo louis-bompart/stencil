@@ -33,7 +33,12 @@ let isSvgMode = false;
  * @param parentElm the parent DOM node which our new node will be a child of
  * @returns a weak reference to the newly created node
  */
-const createElm = (oldParentVNode: d.VNode, newParentVNode: d.VNode, childIndex: number, parentElm: d.RenderNode): WeakRef<d.RenderNode> => {
+const createElm = (
+  oldParentVNode: d.VNode,
+  newParentVNode: d.VNode,
+  childIndex: number,
+  parentElm: d.RenderNode
+): WeakRef<d.RenderNode> => {
   // tslint:disable-next-line: prefer-const
   const newVNode = newParentVNode.$children$[childIndex];
   let i = 0;
@@ -217,7 +222,7 @@ const addVnodes = (
   startIdx: number,
   endIdx: number
 ) => {
-  let containerElm = ((BUILD.slotRelocation && parentElm['s-cr'] && parentElm['s-cr'].parentNode) || parentElm);
+  let containerElm = (BUILD.slotRelocation && parentElm['s-cr'] && parentElm['s-cr'].parentNode) || parentElm;
   let childNode: WeakRef<Node>;
   if (BUILD.shadowDom && (containerElm as any).shadowRoot && (containerElm as any).tagName === hostTagName) {
     containerElm = (containerElm as any).shadowRoot;

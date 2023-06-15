@@ -1726,7 +1726,7 @@ export type RuntimeRef = HostElement | {};
  * Interface used to track an Element, it's virtual Node (`VNode`), and other data
  */
 export interface HostRef {
-  $ancestorComponent$?: HostElement;
+  $ancestorComponent$?: WeakRef<HostElement>;
   $flags$: number;
   $cmpMeta$: ComponentRuntimeMeta;
   $hostElement$?: WeakRef<HostElement>;

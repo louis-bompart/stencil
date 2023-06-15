@@ -32,7 +32,9 @@
     let i = 0;
     setInterval(() => {
       const app = document.querySelector('my-app');
-      app.offset = i++;
+      if (app) {
+        app.offset = i++;
+      }
     }, 100);
   }
   </script>

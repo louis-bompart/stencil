@@ -82,7 +82,7 @@ export const proxyComponent = (
                 lazyInstance[memberName](...args);
               }
             });
-          }
+          },
         });
       }
     });
