@@ -85,14 +85,11 @@ export const validateConfig = (
 
   const logger = bootstrapConfig.logger || config.logger || createLogger();
 
-  let devMode = config.devMode ?? DEFAULT_DEV_MODE;
-  // default devMode false
+  let devMode = !isBoolean(config.devMode) ? DEFAULT_DEV_MODE : config.devMode;
   if (config.flags?.prod) {
     devMode = false;
   } else if (config.flags?.dev) {
     devMode = true;
-  } else if (!isBoolean(config.devMode)) {
-    devMode = DEFAULT_DEV_MODE;
   }
 
   const hashFileNames = config.hashFileNames ?? !devMode;
