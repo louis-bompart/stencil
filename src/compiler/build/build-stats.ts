@@ -84,23 +84,21 @@ export function generateBuildStats(
  */
 export async function writeBuildStats(
   config: d.ValidatedConfig,
-  data: result.Result<d.CompilerBuildStats, { diagnostics: d.Diagnostic[] }>
+  data: d.CompilerBuildStats | { diagnostics: d.Diagnostic[] }
 ): Promise<void> {
   const statsTargets = config.outputTargets.filter(isOutputTargetStats);
 
-  await result.map(data, async (compilerBuildStats) => {
-    await Promise.all(
-      statsTargets.map(async (outputTarget) => {
-        if (outputTarget.file) {
-          const result = await config.sys.writeFile(outputTarget.file, JSON.stringify(compilerBuildStats, null, 2));
+  await Promise.all(
+    statsTargets.map(async (outputTarget) => {
+      if (outputTarget.file) {
+        const result = await config.sys.writeFile(outputTarget.file, JSON.stringify(compilerBuildStats, null, 2));
 
-          if (result.error) {
-            config.logger.warn([`Stats failed to write file to ${outputTarget.file}`]);
-          }
+        if (result.error) {
+          config.logger.warn([`Stats failed to write file to ${outputTarget.file}`]);
         }
-      })
-    );
-  });
+      }
+    })
+  );
 }
 
 function sanitizeBundlesForStats(bundleArray: ReadonlyArray<d.BundleModule>): ReadonlyArray<d.CompilerBuildStatBundle> {
@@ -179,9 +177,8 @@ function getCollections(
 ): {
   name: string;
   source: string;
-  tags: string[];
+  tags: string[][];
 }[] {
-  // @ts-ignore
   return buildCtx.collections
     .map((c) => {
       return {

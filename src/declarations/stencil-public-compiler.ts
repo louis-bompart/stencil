@@ -452,9 +452,9 @@ type RequireFields<T, K extends keyof T> = T & { [P in K]-?: T[P] };
  * Fields in {@link Config} to make required for {@link ValidatedConfig}
  */
 type StrictConfigFields =
+  | 'buildEs5'
   | 'cacheDir'
   | 'devServer'
-  | 'buildEs5'
   | 'flags'
   | 'fsNamespace'
   | 'hashFileNames'
