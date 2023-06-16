@@ -91,7 +91,7 @@ export async function writeBuildStats(
   await Promise.all(
     statsTargets.map(async (outputTarget) => {
       if (outputTarget.file) {
-        const result = await config.sys.writeFile(outputTarget.file, JSON.stringify(compilerBuildStats, null, 2));
+        const result = await config.sys.writeFile(outputTarget.file, JSON.stringify(data, null, 2));
 
         if (result.error) {
           config.logger.warn([`Stats failed to write file to ${outputTarget.file}`]);
