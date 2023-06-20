@@ -325,11 +325,13 @@ export interface CompilerBuildStats {
   rollupResults: RollupResults;
   sourceGraph?: BuildSourceGraph;
   componentGraph: BuildResultsComponentGraph;
-  collections: {
-    name: string;
-    source: string;
-    tags: string[];
-  }[];
+  collections: CompilerBuildStatCollection[];
+}
+
+export interface CompilerBuildStatCollection {
+  name: string;
+  source: string;
+  tags: string[][];
 }
 
 export interface CompilerBuildStatBundle {

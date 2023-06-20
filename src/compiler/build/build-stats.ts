@@ -171,14 +171,7 @@ function getComponentsFileMap(config: d.ValidatedConfig, buildCtx: d.BuildCtx) {
   });
 }
 
-function getCollections(
-  config: d.ValidatedConfig,
-  buildCtx: d.BuildCtx
-): {
-  name: string;
-  source: string;
-  tags: string[][];
-}[] {
+function getCollections(config: d.ValidatedConfig, buildCtx: d.BuildCtx): d.CompilerBuildStatCollection[] {
   return buildCtx.collections
     .map((c) => {
       return {
