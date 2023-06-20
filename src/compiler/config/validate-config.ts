@@ -7,10 +7,10 @@ import { setBooleanConfig } from './config-utils';
 import {
   DEFAULT_DEV_MODE,
   DEFAULT_FS_NAMESPACE,
-  DEFAULT_HASHED_FILENAME_LENTH,
+  DEFAULT_HASHED_FILENAME_LENGTH,
   DEFAULT_NAMESPACE,
-  MAX_HASHED_FILENAME_LENTH,
-  MIN_HASHED_FILENAME_LENTH,
+  MAX_HASHED_FILENAME_LENGTH,
+  MIN_HASHED_FILENAME_LENGTH,
 } from './constants';
 import { validateOutputTargets } from './outputs';
 import { validateDevServer } from './validate-dev-server';
@@ -112,7 +112,7 @@ export const validateConfig = (
     minifyJs: config.minifyJs ?? !devMode,
     minifyCss: config.minifyCss ?? !devMode,
     hashFileNames,
-    hashedFileNameLength: config.hashedFileNameLength ?? DEFAULT_HASHED_FILENAME_LENTH,
+    hashedFileNameLength: config.hashedFileNameLength ?? DEFAULT_HASHED_FILENAME_LENGTH,
     buildEs5: config.buildEs5 === true || (!devMode && config.buildEs5 === 'prod'),
     rollupConfig: validateRollupConfig(config),
     ...validatePaths(config),
@@ -160,15 +160,15 @@ export const validateConfig = (
     validatedConfig.hashFileNames = !validatedConfig.devMode;
   }
   if (!isNumber(validatedConfig.hashedFileNameLength)) {
-    validatedConfig.hashedFileNameLength = DEFAULT_HASHED_FILENAME_LENTH;
+    validatedConfig.hashedFileNameLength = DEFAULT_HASHED_FILENAME_LENGTH;
   }
-  if (validatedConfig.hashedFileNameLength < MIN_HASHED_FILENAME_LENTH) {
+  if (validatedConfig.hashedFileNameLength < MIN_HASHED_FILENAME_LENGTH) {
     const err = buildError(diagnostics);
-    err.messageText = `validatedConfig.hashedFileNameLength must be at least ${MIN_HASHED_FILENAME_LENTH} characters`;
+    err.messageText = `validatedConfig.hashedFileNameLength must be at least ${MIN_HASHED_FILENAME_LENGTH} characters`;
   }
-  if (validatedConfig.hashedFileNameLength > MAX_HASHED_FILENAME_LENTH) {
+  if (validatedConfig.hashedFileNameLength > MAX_HASHED_FILENAME_LENGTH) {
     const err = buildError(diagnostics);
-    err.messageText = `validatedConfig.hashedFileNameLength cannot be more than ${MAX_HASHED_FILENAME_LENTH} characters`;
+    err.messageText = `validatedConfig.hashedFileNameLength cannot be more than ${MAX_HASHED_FILENAME_LENGTH} characters`;
   }
   if (!validatedConfig.env) {
     validatedConfig.env = {};
