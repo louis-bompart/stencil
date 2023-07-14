@@ -70,17 +70,13 @@ export class Cache implements d.Cache {
       return false;
     }
 
-    let result: boolean;
-
     try {
       await this.cacheFs.writeFile(this.getCacheFilePath(key), value);
-      result = true;
+      return true;
     } catch (e: unknown) {
       this.failed++;
-      result = false;
+      return false;
     }
-
-    return result;
   }
 
   async has(key: string) {
