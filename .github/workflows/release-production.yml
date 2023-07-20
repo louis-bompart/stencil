@@ -1,5 +1,4 @@
-name: 'Stencil Production Release (TEST)'
-# TODO(NOW): Fix the name of this test (then go back and delete the old entries in GH)
+name: 'Stencil Production Release'
 on:
   workflow_dispatch:
     inputs:
