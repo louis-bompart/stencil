@@ -77,6 +77,9 @@ export interface SerializeImportData extends ImportData {
   importerPath?: string;
 }
 
+/**
+ * What it do??
+ */
 export interface BuildFeatures {
   // encapsulation
   style: boolean;
@@ -159,6 +162,9 @@ export interface BuildFeatures {
   taskQueue: boolean;
 }
 
+/**
+ * What it do??
+ */
 export interface BuildConditionals extends Partial<BuildFeatures> {
   hotModuleReplacement?: boolean;
   isDebug?: boolean;
