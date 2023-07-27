@@ -219,6 +219,8 @@ export namespace Components {
     }
     interface ScopedBasicRoot {
     }
+    interface ScopedSlotChildInsertAdjacent {
+    }
     interface ShadowDomArray {
         "values": number[];
     }
@@ -854,6 +856,12 @@ declare global {
         prototype: HTMLScopedBasicRootElement;
         new (): HTMLScopedBasicRootElement;
     };
+    interface HTMLScopedSlotChildInsertAdjacentElement extends Components.ScopedSlotChildInsertAdjacent, HTMLStencilElement {
+    }
+    var HTMLScopedSlotChildInsertAdjacentElement: {
+        prototype: HTMLScopedSlotChildInsertAdjacentElement;
+        new (): HTMLScopedSlotChildInsertAdjacentElement;
+    };
     interface HTMLShadowDomArrayElement extends Components.ShadowDomArray, HTMLStencilElement {
     }
     var HTMLShadowDomArrayElement: {
@@ -1248,6 +1256,7 @@ declare global {
         "sass-cmp": HTMLSassCmpElement;
         "scoped-basic": HTMLScopedBasicElement;
         "scoped-basic-root": HTMLScopedBasicRootElement;
+        "scoped-slot-child-insert-adjacent": HTMLScopedSlotChildInsertAdjacentElement;
         "shadow-dom-array": HTMLShadowDomArrayElement;
         "shadow-dom-array-root": HTMLShadowDomArrayRootElement;
         "shadow-dom-basic": HTMLShadowDomBasicElement;
@@ -1519,6 +1528,8 @@ declare namespace LocalJSX {
     }
     interface ScopedBasicRoot {
     }
+    interface ScopedSlotChildInsertAdjacent {
+    }
     interface ShadowDomArray {
         "values"?: number[];
     }
@@ -1720,6 +1731,7 @@ declare namespace LocalJSX {
         "sass-cmp": SassCmp;
         "scoped-basic": ScopedBasic;
         "scoped-basic-root": ScopedBasicRoot;
+        "scoped-slot-child-insert-adjacent": ScopedSlotChildInsertAdjacent;
         "shadow-dom-array": ShadowDomArray;
         "shadow-dom-array-root": ShadowDomArrayRoot;
         "shadow-dom-basic": ShadowDomBasic;
@@ -1859,6 +1871,7 @@ declare module "@stencil/core" {
             "sass-cmp": LocalJSX.SassCmp & JSXBase.HTMLAttributes<HTMLSassCmpElement>;
             "scoped-basic": LocalJSX.ScopedBasic & JSXBase.HTMLAttributes<HTMLScopedBasicElement>;
             "scoped-basic-root": LocalJSX.ScopedBasicRoot & JSXBase.HTMLAttributes<HTMLScopedBasicRootElement>;
+            "scoped-slot-child-insert-adjacent": LocalJSX.ScopedSlotChildInsertAdjacent & JSXBase.HTMLAttributes<HTMLScopedSlotChildInsertAdjacentElement>;
             "shadow-dom-array": LocalJSX.ShadowDomArray & JSXBase.HTMLAttributes<HTMLShadowDomArrayElement>;
             "shadow-dom-array-root": LocalJSX.ShadowDomArrayRoot & JSXBase.HTMLAttributes<HTMLShadowDomArrayRootElement>;
             "shadow-dom-basic": LocalJSX.ShadowDomBasic & JSXBase.HTMLAttributes<HTMLShadowDomBasicElement>;
