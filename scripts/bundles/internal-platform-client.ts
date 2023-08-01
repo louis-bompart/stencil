@@ -1,5 +1,5 @@
 import fs from 'fs-extra';
-import glob from 'glob';
+import { globSync } from 'glob';
 import { basename, join } from 'path';
 import { RollupOptions } from 'rollup';
 
@@ -107,7 +107,7 @@ export async function internalClient(opts: BuildOptions) {
 async function copyPolyfills(opts: BuildOptions, outputInternalClientPolyfillsDir: string) {
   const srcPolyfillsDir = join(opts.srcDir, 'client', 'polyfills');
 
-  const srcPolyfillFiles = glob.sync('*.js', { cwd: srcPolyfillsDir });
+  const srcPolyfillFiles = globSync('*.js', { cwd: srcPolyfillsDir });
 
   await Promise.all(
     srcPolyfillFiles.map(async (fileName) => {
