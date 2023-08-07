@@ -43,8 +43,8 @@ jobs:
       - name: Download Build Archive
         uses: ./.github/workflows/actions/download-archive
         with:
-          name: stencil-core
           name: ${{ inputs.build_name }}
+          path: ./stencil-pack-destination
           filename: stencil-core-build.zip
 
       - name: Copy package.json
