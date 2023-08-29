@@ -98,7 +98,7 @@ const visitClassDeclaration = (
   // create an array of all class members which are _not_ methods decorated
   // with a Stencil decorator. We do this here because we'll implement the
   // behavior specified for those decorated methods later on.
-  let filteredMethodsAndFields = removeStencilMethodDecorators(Array.from(classMembers), diagnostics);
+  const filteredMethodsAndFields = removeStencilMethodDecorators(Array.from(classMembers), diagnostics);
 
   // parser component decorator (Component)
   componentDecoratorToStatic(config, typeChecker, diagnostics, classNode, filteredMethodsAndFields, componentDecorator);
@@ -122,12 +122,7 @@ const visitClassDeclaration = (
     elementDecoratorsToStatic(diagnostics, decoratedMembers, typeChecker, filteredMethodsAndFields);
     watchDecoratorsToStatic(config, diagnostics, decoratedMembers, watchable, filteredMethodsAndFields);
     listenDecoratorsToStatic(diagnostics, decoratedMembers, filteredMethodsAndFields);
-    filteredMethodsAndFields = formInternalsDecoratorsToStatic(
-      diagnostics,
-      classNode,
-      decoratedMembers,
-      filteredMethodsAndFields,
-    );
+    formInternalsDecoratorsToStatic(diagnostics, classNode, decoratedMembers, filteredMethodsAndFields);
   }
 
   // We call the `handleClassFields` method which handles transforming any

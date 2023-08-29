@@ -3,6 +3,7 @@ import ts from 'typescript';
 import type * as d from '../../../declarations';
 import { addCreateEvents } from '../create-event';
 import { retrieveTsModifiers } from '../transform-utils';
+import { addFormInternalsBinding } from './native-form-internals';
 
 /**
  * Updates a constructor to include:
@@ -22,6 +23,7 @@ export const updateNativeConstructor = (
   moduleFile: d.Module,
   cmp: d.ComponentCompilerMeta,
 ): void => {
+  // TODO refactor this to use updateConstructor function instead
   if (cmp.isPlain) {
     return;
   }
@@ -33,7 +35,12 @@ export const updateNativeConstructor = (
     // a constructor may not have a body (e.g. in the case of constructor overloads)
     const cstrBodyStatements: ts.NodeArray<ts.Statement> = cstrMethod.body?.statements ?? ts.factory.createNodeArray();
 
-    let statements: ts.Statement[] = [...nativeInit(cmp), ...addCreateEvents(moduleFile, cmp), ...cstrBodyStatements];
+    let statements: ts.Statement[] = [
+      ...nativeInit(cmp),
+      ...addCreateEvents(moduleFile, cmp),
+      ...addFormInternalsBinding(cmp),
+      ...cstrBodyStatements,
+    ];
 
     const hasSuper = cstrBodyStatements.some((s) => s.kind === ts.SyntaxKind.SuperKeyword);
     if (!hasSuper) {
